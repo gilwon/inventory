@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   title: "재고 관리",
   description: "품목과 위치별 재고를 관리하는 웹앱",
   appleWebApp: { capable: true, title: "재고 관리", statusBarStyle: "default" },
-  icons: { apple: "/icons/apple-touch-icon.png" },
+  // icons를 직접 지정하면 Next가 icon.svg 규약 파일을 head에 넣지 않으므로 명시한다.
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: "/icons/apple-touch-icon.png",
+  },
 };
 
 // 주소창 색을 라이트·다크 배경 토큰(--ux-page)에 맞춘다.
