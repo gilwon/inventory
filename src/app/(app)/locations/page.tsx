@@ -128,11 +128,11 @@ async function LocationsContent({
             <li key={loc.id} style={{ paddingLeft: `${Math.min(depth, 6) * 16}px` }}>
               <Link
                 href={`/locations/${loc.id}`}
-                className={`${cardCls} flex min-h-11 items-center justify-between gap-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 ${focusRing}`}
+                className={`${cardCls} flex min-h-11 items-center justify-between gap-3 py-2 hover:bg-surface-2 ${focusRing}`}
               >
                 <span className="min-w-0">
                   <span className="block break-words font-medium">{loc.name}</span>
-                  <span className="block break-all text-sm text-zinc-700 dark:text-zinc-300">
+                  <span className="block break-all text-sm text-ink-2">
                     {needle ? `${loc.code} · ${paths.get(loc.id)}` : loc.code}
                   </span>
                 </span>
@@ -149,7 +149,7 @@ async function LocationsContent({
 // 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function LocationsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
       <LocationsContent searchParams={searchParams} />
     </Suspense>
   );

@@ -58,13 +58,13 @@ async function DashboardData() {
 
       <section aria-label="요약" className="grid grid-cols-2 gap-3">
         <div className={cardCls}>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">활성 품목</p>
+          <p className="text-sm text-ink-2">활성 품목</p>
           <p className="text-2xl font-bold tabular-nums">
             {itemCnt.error ? "-" : formatQty(itemCnt.count ?? 0)}
           </p>
         </div>
         <div className={cardCls}>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">활성 위치</p>
+          <p className="text-sm text-ink-2">활성 위치</p>
           <p className="text-2xl font-bold tabular-nums">
             {locCnt.error ? "-" : formatQty(locCnt.count ?? 0)}
           </p>
@@ -90,15 +90,15 @@ async function DashboardData() {
             {rows.map((r) => (
               <li
                 key={r.id}
-                className="grid gap-x-4 gap-y-1 rounded-lg border border-zinc-300 bg-white p-3 text-sm dark:border-zinc-700 dark:bg-zinc-900 md:grid-cols-[9rem_4rem_1fr_6rem_8rem] md:items-center"
+                className="grid gap-x-4 gap-y-1 rounded-2xl border border-line bg-surface p-3 text-sm md:grid-cols-[9rem_4rem_1fr_6rem_8rem] md:items-center"
               >
-                <p className="text-zinc-700 dark:text-zinc-300">{formatKst(r.created_at)}</p>
+                <p className="text-ink-2">{formatKst(r.created_at)}</p>
                 <p className="font-semibold">{typeLabel(r)}</p>
                 <div className="min-w-0">
                   <p className="break-words font-medium">
                     {r.items ? `${r.items.sku} ${r.items.name}` : "알 수 없는 품목"}
                   </p>
-                  <p className="break-words text-zinc-700 dark:text-zinc-300">
+                  <p className="break-words text-ink-2">
                     {paths.get(r.location_id) ?? ""}
                   </p>
                 </div>
@@ -106,7 +106,7 @@ async function DashboardData() {
                   {r.delta > 0 ? "+" : "-"}
                   {formatQty(Math.abs(r.delta), r.items?.unit)}
                 </p>
-                <p className="break-words text-zinc-700 dark:text-zinc-300">
+                <p className="break-words text-ink-2">
                   작업자 {r.profiles?.display_name ?? "알 수 없음"}
                 </p>
               </li>
@@ -142,7 +142,7 @@ export default function DashboardPage() {
         </div>
       </form>
 
-      <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+      <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
         <DashboardData />
       </Suspense>
     </div>

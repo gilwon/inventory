@@ -68,7 +68,7 @@ async function ItemDetailContent({
           <h1 className="min-w-0 break-words text-xl font-bold">{item.name}</h1>
           {!item.active && <span className={badgeCls}>보관됨</span>}
         </div>
-        <p className="break-all text-sm text-zinc-700 dark:text-zinc-300">
+        <p className="break-all text-sm text-ink-2">
           {item.sku}
         </p>
       </div>
@@ -80,7 +80,7 @@ async function ItemDetailContent({
         {stock.length === 0 ? (
           <p className="text-sm">수량이 있는 위치가 없습니다.</p>
         ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-700">
+          <ul className="divide-y divide-line">
             {stock.map((s) => (
               <li key={s.location_id} className="flex items-center justify-between gap-3">
                 <Link href={`/locations/${s.location_id}`} className={`${linkCls} inline-flex min-h-11 items-center min-w-0 break-words`}>
@@ -91,7 +91,7 @@ async function ItemDetailContent({
             ))}
           </ul>
         )}
-        <p className="flex justify-between border-t border-zinc-300 pt-2 font-bold dark:border-zinc-600">
+        <p className="flex justify-between border-t border-line pt-2 font-bold">
           <span>합계</span>
           <span>{formatQty(total, item.unit)}</span>
         </p>
@@ -123,7 +123,7 @@ async function ItemDetailContent({
         {(moveRes.data ?? []).length === 0 ? (
           <p className="text-sm">이력이 없습니다.</p>
         ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-700">
+          <ul className="divide-y divide-line">
             {(moveRes.data ?? []).map((m) => (
               <li key={m.id} className="space-y-0.5 py-2 text-sm">
                 <div className="flex justify-between gap-3">
@@ -136,7 +136,7 @@ async function ItemDetailContent({
                     {formatQty(m.delta, item.unit)}
                   </span>
                 </div>
-                <p className="break-words text-zinc-700 dark:text-zinc-300">
+                <p className="break-words text-ink-2">
                   {formatKst(m.created_at)} · {paths.get(m.location_id) ?? ""}
                   {m.reason ? ` · ${m.reason}` : ""}
                 </p>
@@ -152,7 +152,7 @@ async function ItemDetailContent({
 // 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function ItemDetailPage({ params }: { params: Promise<{ id: string }> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
       <ItemDetailContent params={params} />
     </Suspense>
   );

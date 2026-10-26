@@ -22,28 +22,28 @@ type ApplyResult = {
 const STATUS: Record<RowStatus, { label: string; cls: string }> = {
   new: {
     label: "신규",
-    cls: "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200",
+    cls: "border border-mint bg-surface-2 text-ink",
   },
   update: {
     label: "갱신",
-    cls: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200",
+    cls: "border border-accent bg-surface-2 text-ink",
   },
   existing: {
     label: "기존",
-    cls: "bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-200",
+    cls: "border border-line-2 bg-surface-2 text-ink",
   },
   ignored: {
     label: "수량 무시됨",
-    cls: "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200",
+    cls: "border border-warn bg-surface-2 text-ink",
   },
   error: {
     label: "오류",
-    cls: "bg-red-100 text-red-900 dark:bg-red-950 dark:text-red-200",
+    cls: "border border-danger bg-surface-2 text-ink",
   },
 };
 
 const focus =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:focus-visible:ring-blue-400";
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
 
 // 서버 응답이 JSON 이 아니어도(용량 초과 등) 메시지를 만든다.
 async function readJson(res: Response) {
@@ -140,7 +140,7 @@ export function ImportPanel() {
           accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           disabled={busy !== null}
           onChange={(e) => onPick(e.target.files?.[0] ?? null)}
-          className={`block w-full max-w-full rounded-md border border-zinc-400 bg-white p-2 text-sm file:mr-3 file:rounded file:border-0 file:bg-zinc-200 file:px-3 file:py-2 file:text-sm file:font-medium file:text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:file:bg-zinc-700 dark:file:text-zinc-100 ${focus}`}
+          className={`block w-full max-w-full rounded-xl border border-ink-3 bg-surface p-2 text-sm file:mr-3 file:rounded file:border-0 file:bg-surface-3 file:px-3 file:py-2 file:text-sm file:font-medium file:text-ink ${focus}`}
         />
       </div>
 
@@ -148,12 +148,12 @@ export function ImportPanel() {
         {busy === "preview" && <p className="text-sm">미리보기를 만드는 중입니다...</p>}
         {busy === "apply" && <p className="text-sm">가져오는 중입니다...</p>}
         {message && (
-          <p className="rounded-md bg-red-100 p-3 text-sm text-red-900 dark:bg-red-950 dark:text-red-200">
+          <p className="rounded-xl border border-danger bg-surface-2 p-3 text-sm text-ink">
             {message}
           </p>
         )}
         {result && (
-          <div className="rounded-md bg-green-100 p-3 text-sm text-green-900 dark:bg-green-950 dark:text-green-200">
+          <div className="rounded-xl border border-mint bg-surface-2 p-3 text-sm text-ink">
             <p className="font-semibold">가져오기를 마쳤습니다.</p>
             <ul className="mt-1 list-disc pl-5">
               <li>위치 {result.locations_created}건 생성</li>
@@ -173,7 +173,7 @@ export function ImportPanel() {
             , 수량 무시됨 {count("ignored")}, 오류 {count("error")}
           </p>
           {hasError && (
-            <p className="text-sm font-medium text-red-800 dark:text-red-300">
+            <p className="text-sm font-medium text-danger">
               오류가 있어 가져올 수 없습니다. 파일을 고쳐 다시 올리세요.
             </p>
           )}
@@ -183,7 +183,7 @@ export function ImportPanel() {
             {sorted.map((r) => (
               <li
                 key={`${r.sheet}-${r.row}`}
-                className="rounded-md border border-zinc-300 p-3 text-sm dark:border-zinc-700"
+                className="rounded-xl border border-line p-3 text-sm"
               >
                 <dl className="space-y-1">
                   <div className="flex gap-2">
@@ -215,10 +215,10 @@ export function ImportPanel() {
             ))}
           </ul>
 
-          <div className="hidden max-w-full overflow-x-auto rounded-md border border-zinc-300 md:block dark:border-zinc-700">
+          <div className="hidden max-w-full overflow-x-auto rounded-xl border border-line md:block">
             <table className="w-full min-w-[32rem] text-left text-sm">
               <caption className="sr-only">가져오기 미리보기</caption>
-              <thead className="bg-zinc-100 dark:bg-zinc-800">
+              <thead className="bg-surface-2">
                 <tr>
                   <th scope="col" className="px-3 py-2 font-semibold">시트</th>
                   <th scope="col" className="px-3 py-2 font-semibold">행</th>
@@ -231,7 +231,7 @@ export function ImportPanel() {
                 {sorted.map((r) => (
                   <tr
                     key={`${r.sheet}-${r.row}`}
-                    className="border-t border-zinc-200 align-top dark:border-zinc-700"
+                    className="border-t border-line align-top"
                   >
                     <td className="px-3 py-2">{r.sheet}</td>
                     <td className="px-3 py-2">{r.row}</td>
@@ -254,7 +254,7 @@ export function ImportPanel() {
             type="button"
             onClick={onApply}
             disabled={hasError || rows.length === 0 || busy !== null}
-            className={`min-h-11 rounded-md bg-blue-700 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-zinc-400 disabled:text-zinc-900 dark:bg-blue-600 dark:hover:bg-blue-500 dark:disabled:bg-zinc-700 dark:disabled:text-zinc-300 ${focus}`}
+            className={`min-h-11 rounded-xl bg-accent px-5 py-2 text-sm font-semibold text-accent-ink hover:opacity-90 disabled:cursor-not-allowed disabled:bg-surface-3 disabled:text-ink-2 ${focus}`}
           >
             가져오기 확정
           </button>

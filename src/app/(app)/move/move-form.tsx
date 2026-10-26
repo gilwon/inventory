@@ -24,9 +24,9 @@ const TABS: { type: Tab; label: string }[] = [
 const MAX_QTY = 2147483647;
 
 const focus =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:focus-visible:ring-blue-400";
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
 // 모바일에서 입력 확대를 막으려고 글자 크기를 16px(text-base)로 둔다.
-const field = `block min-h-12 w-full min-w-0 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 ${focus}`;
+const field = `block min-h-12 w-full min-w-0 rounded-xl border border-ink-3 bg-surface px-3 py-2 text-base text-ink ${focus}`;
 const label = "block text-sm font-medium";
 
 export function MoveForm({ locations }: { locations: Loc[] }) {
@@ -178,14 +178,14 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
 
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
-      <div role="group" aria-label="작업 유형" className="grid grid-cols-4 gap-1 rounded-lg bg-zinc-200 p-1 dark:bg-zinc-800">
+      <div role="group" aria-label="작업 유형" className="grid grid-cols-4 gap-1 rounded-2xl bg-surface-3 p-1">
         {TABS.map((t) => (
           <button
             key={t.type}
             type="button"
             aria-pressed={tab === t.type}
             onClick={() => changeTab(t.type)}
-            className={`min-h-12 rounded-md text-base font-medium text-zinc-800 aria-pressed:bg-blue-700 aria-pressed:text-white hover:bg-zinc-100 aria-pressed:hover:bg-blue-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:aria-pressed:bg-blue-600 ${focus}`}
+            className={`min-h-12 rounded-xl text-base font-medium text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink hover:bg-surface-2 aria-pressed:hover:opacity-90 ${focus}`}
           >
             {t.label}
           </button>
@@ -194,9 +194,9 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
 
       {/* 품목 선택 */}
       {item ? (
-        <div className="flex items-center justify-between gap-2 rounded-md border border-zinc-400 bg-white p-3 dark:border-zinc-600 dark:bg-zinc-900">
+        <div className="flex items-center justify-between gap-2 rounded-xl border border-ink-3 bg-surface p-3">
           <div className="min-w-0">
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">품목</p>
+            <p className="text-xs text-ink-2">품목</p>
             <p className="break-words font-medium">
               {item.sku} {item.name}
             </p>
@@ -208,7 +208,7 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
               setQuery("");
               setNotice(null);
             }}
-            className={`min-h-11 shrink-0 rounded-md px-3 text-sm font-medium text-blue-800 hover:bg-blue-50 dark:text-blue-300 dark:hover:bg-blue-950 ${focus}`}
+            className={`min-h-11 shrink-0 rounded-xl px-3 text-sm font-medium text-accent hover:bg-surface-2 ${focus}`}
           >
             변경
           </button>
@@ -228,14 +228,14 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
           />
           <div aria-live="polite">
             {term && shown && shown.length === 0 && (
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">검색 결과가 없습니다.</p>
+              <p className="text-sm text-ink-2">검색 결과가 없습니다.</p>
             )}
             {term && !shown && (
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">검색 중...</p>
+              <p className="text-sm text-ink-2">검색 중...</p>
             )}
           </div>
           {term && shown && shown.length > 0 && (
-            <ul className="divide-y divide-zinc-200 overflow-hidden rounded-md border border-zinc-400 bg-white dark:divide-zinc-700 dark:border-zinc-600 dark:bg-zinc-900">
+            <ul className="divide-y divide-line overflow-hidden rounded-xl border border-ink-3 bg-surface">
               {shown.map((h) => (
                 <li key={h.id}>
                   <button
@@ -244,12 +244,12 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
                       setItem(h);
                       setNotice(null);
                     }}
-                    className={`flex min-h-12 w-full flex-col items-start px-3 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-800 ${focus}`}
+                    className={`flex min-h-12 w-full flex-col items-start px-3 py-2 text-left hover:bg-surface-2 ${focus}`}
                   >
                     <span className="break-words font-medium">
                       {h.sku} {h.name}
                     </span>
-                    <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                    <span className="text-xs text-ink-2">
                       전체 {formatQty(h.total_qty, h.unit)}
                     </span>
                   </button>
@@ -266,7 +266,7 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
       })}
 
       {tab !== "receive" && item && locId && (
-        <p aria-live="polite" className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+        <p aria-live="polite" className="text-sm font-medium text-ink">
           현재 수량{" "}
           {current === undefined
             ? "확인 중..."
@@ -300,12 +300,12 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
         />
         <div id="qty-hint" aria-live="polite" className="text-sm">
           {over && (
-            <p className="font-medium text-red-700 dark:text-red-400">
+            <p className="font-medium text-danger">
               현재 수량({formatQty(current as number, unit)})보다 많아 제출할 수 없습니다.
             </p>
           )}
           {tab === "adjust" && qtyNum !== null && typeof current === "number" && (
-            <p className="text-zinc-700 dark:text-zinc-300">
+            <p className="text-ink-2">
               차이 {qtyNum - current > 0 ? "+" : ""}
               {formatQty(qtyNum - current)}
             </p>
@@ -330,10 +330,10 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
       {notice && (
         <p
           role={notice.ok ? "status" : "alert"}
-          className={`rounded-md border p-3 text-sm font-medium ${
+          className={`rounded-xl border p-3 text-sm font-medium ${
             notice.ok
-              ? "border-green-700 bg-green-50 text-green-900 dark:border-green-500 dark:bg-green-950 dark:text-green-200"
-              : "border-red-700 bg-red-50 text-red-900 dark:border-red-500 dark:bg-red-950 dark:text-red-200"
+              ? "border-mint bg-surface-2 text-ink"
+              : "border-danger bg-surface-2 text-ink"
           }`}
         >
           {notice.text}
@@ -343,7 +343,7 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
       <button
         type="submit"
         disabled={pending || over}
-        className="min-h-12 w-full rounded-md bg-blue-700 px-4 py-2 text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:opacity-60 dark:focus-visible:ring-offset-zinc-900"
+        className="min-h-12 w-full rounded-xl bg-accent px-4 py-2 text-base font-medium text-accent-ink hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:opacity-60"
       >
         {pending ? "처리 중..." : `${TABS.find((t) => t.type === tab)?.label} 기록`}
       </button>

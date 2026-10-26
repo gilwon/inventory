@@ -163,7 +163,7 @@ export function ItemForm({
           <img
             src={shownPhoto}
             alt="품목 사진"
-            className="h-40 w-40 max-w-full rounded-md border border-zinc-300 object-cover dark:border-zinc-700"
+            className="h-40 w-40 max-w-full rounded-xl border border-line object-cover"
           />
         )}
         <input
@@ -171,7 +171,7 @@ export function ItemForm({
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
           onChange={onFile}
-          className={`block w-full min-w-0 text-sm file:mr-3 file:min-h-11 file:rounded-md file:border file:border-zinc-400 file:bg-white file:px-3 file:text-zinc-900 dark:file:border-zinc-600 dark:file:bg-zinc-900 dark:file:text-zinc-100`}
+          className={`block w-full min-w-0 text-sm file:mr-3 file:min-h-11 file:rounded-xl file:border file:border-ink-3 file:bg-surface file:px-3 file:text-ink`}
         />
         {uploading && <p className="text-sm">사진을 올리는 중...</p>}
         {photoError && (
@@ -187,7 +187,7 @@ export function ItemForm({
         </p>
       )}
       {state.ok && (
-        <p role="status" className="text-sm font-medium text-green-800 dark:text-green-400">
+        <p role="status" className="text-sm font-medium text-ink">
           저장했습니다.
         </p>
       )}
@@ -219,7 +219,7 @@ function Field({
       <label htmlFor={id} className="block text-sm font-medium">
         {label}
         {required && (
-          <span aria-hidden="true" className="text-red-700 dark:text-red-400">
+          <span aria-hidden="true" className="text-danger">
             {" *"}
           </span>
         )}

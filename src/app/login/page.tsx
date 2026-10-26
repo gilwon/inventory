@@ -13,7 +13,7 @@ export default function LoginPage() {
     <main className="flex flex-1 items-center justify-center px-4 py-8">
       <form
         action={formAction}
-        className="w-full max-w-sm space-y-4 rounded-lg border border-zinc-300 bg-white p-6 text-zinc-900 shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+        className="w-full max-w-sm space-y-4 rounded-2xl border border-line bg-surface p-6 text-ink shadow-sm"
       >
         <h1 className="text-xl font-bold">재고 관리 로그인</h1>
 
@@ -27,7 +27,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             required
-            className="block w-full min-w-0 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 dark:focus-visible:ring-blue-400"
+            className="block w-full min-w-0 rounded-xl border border-ink-3 bg-surface px-3 py-2 text-base text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           />
         </div>
 
@@ -41,12 +41,12 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             required
-            className="block w-full min-w-0 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 dark:focus-visible:ring-blue-400"
+            className="block w-full min-w-0 rounded-xl border border-ink-3 bg-surface px-3 py-2 text-base text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           />
         </div>
 
         {state.error && (
-          <p role="alert" className="text-sm font-medium text-red-700 dark:text-red-400">
+          <p role="alert" className="text-sm font-medium text-danger">
             {state.error}
           </p>
         )}
@@ -54,7 +54,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:opacity-60 dark:focus-visible:ring-blue-400 dark:focus-visible:ring-offset-zinc-900"
+          className="w-full rounded-xl bg-accent px-4 py-2 font-medium text-accent-ink hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:opacity-60"
         >
           {pending ? "로그인 중..." : "로그인"}
         </button>

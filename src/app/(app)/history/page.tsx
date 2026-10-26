@@ -45,8 +45,8 @@ type Entry = { key: string; row: Row; out?: Row; in?: Row; reversed: boolean };
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const focus =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:focus-visible:ring-blue-400";
-const field = `block min-h-11 w-full min-w-0 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 ${focus}`;
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
+const field = `block min-h-11 w-full min-w-0 rounded-xl border border-ink-3 bg-surface px-3 py-2 text-base text-ink ${focus}`;
 
 function first(v: string | string[] | undefined): string {
   return (Array.isArray(v) ? v[0] : v)?.trim() ?? "";
@@ -63,7 +63,7 @@ function typeLabel(r: Row): string {
 
 function ErrorText({ children }: { children: React.ReactNode }) {
   return (
-    <p role="alert" className="text-sm font-medium text-red-700 dark:text-red-400">
+    <p role="alert" className="text-sm font-medium text-danger">
       {children}
     </p>
   );
@@ -185,7 +185,7 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
       <form
         method="get"
         action="/history"
-        className="grid grid-cols-1 gap-3 rounded-lg border border-zinc-300 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-900 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-3 rounded-2xl border border-line bg-surface p-3 sm:grid-cols-2 lg:grid-cols-3"
       >
         <div className="space-y-1">
           <label htmlFor="f-from" className="block text-sm font-medium">시작일</label>
@@ -229,13 +229,13 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
         <div className="flex gap-2 sm:col-span-2 lg:col-span-3">
           <button
             type="submit"
-            className="min-h-11 rounded-md bg-blue-700 px-5 text-base font-medium text-white hover:bg-blue-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+            className="min-h-11 rounded-xl bg-accent px-5 text-base font-medium text-accent-ink hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
           >
             조회
           </button>
           <Link
             href="/history"
-            className={`flex min-h-11 items-center rounded-md border border-zinc-500 px-5 text-base font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800 ${focus}`}
+            className={`flex min-h-11 items-center rounded-xl border border-ink-3 px-5 text-base font-medium text-ink hover:bg-surface-2 ${focus}`}
           >
             초기화
           </Link>
@@ -244,10 +244,10 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
 
       {errorMessage && <ErrorText>이력을 불러오지 못했습니다. {errorMessage}</ErrorText>}
       {!errorMessage && entries.length === 0 && (
-        <p className="text-sm text-zinc-700 dark:text-zinc-300">조건에 맞는 이력이 없습니다.</p>
+        <p className="text-sm text-ink-2">조건에 맞는 이력이 없습니다.</p>
       )}
       {q && itemIds && itemIds.length >= 200 && (
-        <p className="text-sm text-zinc-700 dark:text-zinc-300">
+        <p className="text-sm text-ink-2">
           검색된 품목이 많아 일부만 조회했습니다. 검색어를 더 구체적으로 입력해 주세요.
         </p>
       )}
@@ -261,23 +261,23 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
           return (
             <li
               key={e.key}
-              className="grid gap-x-4 gap-y-1 rounded-lg border border-zinc-300 bg-white p-3 text-sm dark:border-zinc-700 dark:bg-zinc-900 md:grid-cols-[9rem_5rem_1fr_6rem_auto] md:items-center"
+              className="grid gap-x-4 gap-y-1 rounded-2xl border border-line bg-surface p-3 text-sm md:grid-cols-[9rem_5rem_1fr_6rem_auto] md:items-center"
             >
-              <p className="text-zinc-700 dark:text-zinc-300">{formatKst(r.created_at)}</p>
+              <p className="text-ink-2">{formatKst(r.created_at)}</p>
               <p className="font-semibold">{typeLabel(r)}</p>
               <div className="min-w-0">
                 <p className="break-words font-medium">
                   {r.items ? `${r.items.sku} ${r.items.name}` : "알 수 없는 품목"}
                 </p>
-                <p className="break-words text-zinc-700 dark:text-zinc-300">
+                <p className="break-words text-ink-2">
                   {isTransfer
                     ? `${e.out ? paths.get(e.out.location_id) ?? "" : "?"} > ${e.in ? paths.get(e.in.location_id) ?? "" : "?"}`
                     : paths.get(r.location_id) ?? ""}
                 </p>
                 {r.reason && (
-                  <p className="break-words text-zinc-700 dark:text-zinc-300">사유 {r.reason}</p>
+                  <p className="break-words text-ink-2">사유 {r.reason}</p>
                 )}
-                <p className="text-zinc-700 dark:text-zinc-300">
+                <p className="text-ink-2">
                   작업자 {r.profiles?.display_name ?? "알 수 없음"}
                 </p>
               </div>
@@ -289,7 +289,7 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
                 {canReverse ? (
                   <ReverseButton movementId={(e.out ?? r).id} />
                 ) : e.reversed ? (
-                  <span className="inline-block rounded-md bg-zinc-200 px-2 py-1 text-xs font-medium text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100">
+                  <span className="inline-block rounded-md border border-line-2 bg-surface-2 px-2 py-1 text-xs font-medium text-ink">
                     정정됨
                   </span>
                 ) : null}
@@ -304,18 +304,18 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
           {pageNum > 1 ? (
             <Link
               href={pageHref(pageNum - 1)}
-              className={`flex min-h-11 items-center rounded-md border border-zinc-500 px-5 font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 ${focus}`}
+              className={`flex min-h-11 items-center rounded-xl border border-ink-3 px-5 font-medium hover:bg-surface-2 ${focus}`}
             >
               이전
             </Link>
           ) : (
             <span />
           )}
-          <span className="text-sm text-zinc-700 dark:text-zinc-300">{pageNum}쪽</span>
+          <span className="text-sm text-ink-2">{pageNum}쪽</span>
           {hasNext ? (
             <Link
               href={pageHref(pageNum + 1)}
-              className={`flex min-h-11 items-center rounded-md border border-zinc-500 px-5 font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 ${focus}`}
+              className={`flex min-h-11 items-center rounded-xl border border-ink-3 px-5 font-medium hover:bg-surface-2 ${focus}`}
             >
               다음
             </Link>
@@ -332,7 +332,7 @@ export default function HistoryPage({ searchParams }: { searchParams: SearchPara
   return (
     <div className="mx-auto max-w-5xl space-y-4">
       <h1 className="text-xl font-bold">이력</h1>
-      <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+      <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
         <HistoryContent searchParams={searchParams} />
       </Suspense>
     </div>

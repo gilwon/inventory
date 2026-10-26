@@ -103,11 +103,11 @@ async function ItemsContent({
             <li key={r.id}>
               <Link
                 href={`/items/${r.id}`}
-                className={`${cardCls} flex items-start justify-between gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 ${focusRing}`}
+                className={`${cardCls} flex items-start justify-between gap-3 hover:bg-surface-2 ${focusRing}`}
               >
                 <span className="min-w-0">
                   <span className="block break-words font-medium">{r.name}</span>
-                  <span className="block break-all text-sm text-zinc-700 dark:text-zinc-300">
+                  <span className="block break-all text-sm text-ink-2">
                     {r.sku}
                   </span>
                 </span>
@@ -149,7 +149,7 @@ async function ItemsContent({
 // 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function ItemsPage({ searchParams }: { searchParams: Promise<SP> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
       <ItemsContent searchParams={searchParams} />
     </Suspense>
   );

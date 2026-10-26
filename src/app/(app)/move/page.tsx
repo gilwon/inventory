@@ -12,7 +12,7 @@ async function MoveContent() {
     .select("id,parent_id,name,active");
   if (error) {
     return (
-      <p role="alert" className="text-sm font-medium text-red-700 dark:text-red-400">
+      <p role="alert" className="text-sm font-medium text-danger">
         위치 목록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
       </p>
     );
@@ -30,7 +30,7 @@ export default function MovePage() {
   return (
     <div className="mx-auto max-w-xl space-y-4">
       <h1 className="text-xl font-bold">입출고</h1>
-      <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+      <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
         <MoveContent />
       </Suspense>
     </div>

@@ -66,7 +66,7 @@ async function LocationDetailContent({
           <h1 className="min-w-0 break-words text-xl font-bold">{loc.name}</h1>
           {!loc.active && <span className={badgeCls}>보관됨</span>}
         </div>
-        <p className="break-words text-sm text-zinc-700 dark:text-zinc-300">
+        <p className="break-words text-sm text-ink-2">
           {loc.code} · {paths.get(loc.id)}
         </p>
       </div>
@@ -78,7 +78,7 @@ async function LocationDetailContent({
         {stock.length === 0 ? (
           <p className="text-sm">이 위치에 수량이 있는 품목이 없습니다.</p>
         ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-700">
+          <ul className="divide-y divide-line">
             {stock.map(({ qty, item }) => (
               <li key={item.id} className="flex items-center justify-between gap-3">
                 <Link href={`/items/${item.id}`} className={`${linkCls} inline-flex min-h-11 items-center min-w-0 break-words`}>
@@ -136,7 +136,7 @@ async function LocationDetailContent({
 // 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function LocationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
       <LocationDetailContent params={params} />
     </Suspense>
   );

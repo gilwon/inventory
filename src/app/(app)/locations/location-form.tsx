@@ -73,7 +73,7 @@ export function LocationForm({ location, options }: Props) {
         </p>
       )}
       {state.ok && (
-        <p role="status" className="text-sm font-medium text-green-800 dark:text-green-400">
+        <p role="status" className="text-sm font-medium text-ink">
           저장했습니다.
         </p>
       )}

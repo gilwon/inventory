@@ -19,7 +19,7 @@ function isActive(pathname: string, href: string) {
 }
 
 const focus =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:focus-visible:ring-blue-400";
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
 
 // PC 화면(md 이상) 좌측 내비
 export function SideNav() {
@@ -31,7 +31,7 @@ export function SideNav() {
           key={l.href}
           href={l.href}
           aria-current={isActive(pathname, l.href) ? "page" : undefined}
-          className={`rounded-md px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 aria-[current=page]:bg-blue-50 aria-[current=page]:text-blue-800 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:aria-[current=page]:bg-blue-950 dark:aria-[current=page]:text-blue-200 ${focus}`}
+          className={`rounded-xl px-3 py-2 text-sm font-medium text-ink-2 hover:bg-surface-2 aria-[current=page]:bg-accent-soft aria-[current=page]:text-ink ${focus}`}
         >
           {l.label}
         </Link>
@@ -44,19 +44,19 @@ export function SideNav() {
 export function BottomNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const tab = `flex min-h-14 flex-1 items-center justify-center px-1 text-xs font-medium text-zinc-700 aria-[current=page]:text-blue-800 aria-[current=page]:underline dark:text-zinc-300 dark:aria-[current=page]:text-blue-200 ${focus}`;
+  const tab = `flex min-h-14 flex-1 items-center justify-center px-1 text-xs font-medium text-ink-2 aria-[current=page]:text-accent aria-[current=page]:underline ${focus}`;
 
   return (
     <nav
       aria-label="주 메뉴"
-      className="fixed inset-x-0 bottom-0 z-10 border-t border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900 md:hidden"
+      className="fixed inset-x-0 bottom-0 z-10 border-t border-line bg-surface md:hidden"
     >
       {open && (
         <Link
           href={MORE.href}
           onClick={() => setOpen(false)}
           aria-current={isActive(pathname, MORE.href) ? "page" : undefined}
-          className={`block border-b border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-800 dark:border-zinc-700 dark:text-zinc-200 ${focus}`}
+          className={`block border-b border-line px-4 py-3 text-sm font-medium text-ink ${focus}`}
         >
           {MORE.label}
         </Link>

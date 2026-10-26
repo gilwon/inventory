@@ -23,12 +23,12 @@ export function ReverseButton({ movementId }: { movementId: number }) {
         type="button"
         onClick={onClick}
         disabled={pending}
-        className="min-h-11 rounded-md border border-zinc-500 px-4 text-sm font-medium text-zinc-900 hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 disabled:opacity-60 dark:border-zinc-500 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:focus-visible:ring-blue-400"
+        className="min-h-11 rounded-xl border border-ink-3 px-4 text-sm font-medium text-ink hover:bg-surface-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-60"
       >
         {pending ? "정정 중..." : "정정"}
       </button>
       {error && (
-        <p role="alert" className="text-sm font-medium text-red-700 dark:text-red-400">
+        <p role="alert" className="text-sm font-medium text-danger">
           {error}
         </p>
       )}

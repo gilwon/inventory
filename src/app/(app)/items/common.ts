@@ -36,14 +36,13 @@ export function koRpcError(e: { message: string }): string {
 }
 
 export const focusRing =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:focus-visible:ring-blue-400";
-export const inputCls = `block w-full min-w-0 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 ${focusRing}`;
-export const btnPrimary = `inline-flex min-h-11 items-center justify-center rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 disabled:opacity-60 ${focusRing} focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900`;
-export const btnSecondary = `inline-flex min-h-11 items-center justify-center rounded-md border border-zinc-400 bg-white px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 disabled:opacity-60 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800 ${focusRing}`;
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
+export const inputCls = `block w-full min-w-0 min-h-11 rounded-xl border border-ink-3 bg-surface px-3 py-2 text-base text-ink ${focusRing}`;
+export const btnPrimary = `inline-flex shrink-0 whitespace-nowrap min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60 ${focusRing} focus-visible:ring-offset-2 focus-visible:ring-offset-surface`;
+export const btnSecondary = `inline-flex shrink-0 whitespace-nowrap min-h-11 items-center justify-center rounded-xl border border-ink-3 bg-surface px-4 py-2 text-sm font-medium text-ink hover:bg-surface-2 disabled:opacity-60 ${focusRing}`;
 export const cardCls =
-  "rounded-lg border border-zinc-300 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900";
+  "rounded-2xl border border-line bg-surface p-4 shadow-card";
 export const badgeCls =
-  "inline-block rounded bg-zinc-200 px-2 py-0.5 text-xs font-medium text-zinc-800 dark:bg-zinc-700 dark:text-zinc-100";
-export const linkCls = `font-medium text-blue-800 underline underline-offset-2 hover:text-blue-950 dark:text-blue-300 dark:hover:text-blue-200 ${focusRing} rounded-sm`;
-export const errCls =
-  "text-sm font-medium text-red-700 dark:text-red-400";
+  "inline-block rounded-md border border-line-2 bg-surface-2 px-2 py-0.5 text-xs font-medium text-ink";
+export const linkCls = `font-medium text-accent underline underline-offset-2 hover:opacity-80 ${focusRing} rounded-sm`;
+export const errCls = "text-sm font-medium text-danger";
