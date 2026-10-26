@@ -46,6 +46,15 @@ U1(직렬) → U2와 U3 병렬(파일 겹치지 않음) → Advisor 통합 검�
 - `src/components/lucian/file-drop.tsx`(#032)를 `import-panel.tsx`의 엑셀 입력과 `items/item-form.tsx`의 사진 입력에 연결한다. 단일 파일, 기존 `onPick`/`onFile` 로직과 검증은 그대로.
 - `src/components/lucian/date-range.tsx`(#030)를 `history/page.tsx` 필터의 시작일·종료일에 연결한다. 서버 컴포넌트 안의 GET 폼이므로 클라이언트 컴포넌트가 숨은 `from`·`to` 입력을 렌더한다.
 
+## U5. 입출고 화면 critique 개선 (2026-10-26 critique 스냅샷 `.impeccable/critique/2026-10-26T07-42-53Z__src-app-app-move.md`) — 사용자 승인
+- 대상은 `src/app/(app)/move/move-form.tsx`(필요하면 `page.tsx`), 토스트 위치 보정은 `toast.css`. 기능(Server Action, RPC, 권한)은 바꾸지 않는다.
+- P1-a 검증 오류를 해당 칸 아래 인라인 문구(`errCls`)로 옮기고 첫 오류 칸에 포커스와 `aria-invalid`, `aria-describedby`를 건다. 토스트는 서버 응답(성공, 서버 오류)에만 쓰고, 같은 문구가 `aria-live`와 `role=alert`로 두 번 읽히지 않게 하며 토스트가 뷰포트 밖(1440px에서 y=805)에 뜨지 않게 하고 쌓이지 않게 한다.
+- P1-b 제출 버튼 위에 요약 한 줄(품목·위치·수량)을 상시 보이고 버튼 글자를 "3 개 출고 기록"처럼 바꾼다. 모달은 쓰지 않는다.
+- P2-a 현재 수량을 수량 칸 바로 위로 옮겨 키우고(`text-base font-semibold`) 대상(품목·위치)과 수량·사유를 두 묶음으로 나눈다. 이동 탭은 도착 위치가 현재 수량에 밀리지 않게 한다.
+- P2-b 모바일 하단 내비에 폼 끝과 토스트가 가리지 않게 여백과 토스트 위치를 보정한다.
+- P3 품목 스캔 버튼에 `aria-label="품목 스캔"`, 현재 수량 "조회 실패"에 "다시 조회", 검색 결과 8건일 때 "더 좁혀서 검색해 주세요" 안내, 위치 select 필수 표시.
+- 제외. 시각 체계 변경, 이동 탭 구조 변경, 최근 품목·위치와 키보드 단축(후속).
+
 ## 검증 총괄 (Advisor)
 - diff 읽기, build·tsc·lint·vitest, grep으로 `dark:` 색과 zinc 잔존 확인.
 - 브라우저. 로그인은 사용자가 직접(작업 공간 5 유지). 360/480/1024/1440에서 주요 화면 캡처, 라이트·다크(`prefers-color-scheme` 에뮬레이션), 키보드 포커스, reduced-motion 에뮬레이션.
