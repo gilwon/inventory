@@ -1,8 +1,12 @@
-// 세션 쿠키를 갱신하고 로그인하지 않은 요청을 /login 으로 보낸다
+// 세션 쿠키를 갱신하고 로그인하지 않은 요청을 /login 으로 보낸다. 데모 쿠키가 있으면 인증 없이 통과시킨다.
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { DEMO_COOKIE } from "@/lib/demo";
 
 export async function proxy(request: NextRequest) {
+  // 데모는 목데이터만 쓰므로 Supabase 를 부르지 않는다. /login 도 막지 않아 데모에서 나갈 수 있다.
+  if (request.cookies.get(DEMO_COOKIE)?.value === "1") return NextResponse.next();
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(

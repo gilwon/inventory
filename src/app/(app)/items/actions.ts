@@ -4,6 +4,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
+import { DEMO_MSG, isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, koError, type FormState } from "./common";
 
@@ -27,6 +28,7 @@ export async function saveItem(
   _prev: FormState,
   fd: FormData,
 ): Promise<FormState> {
+  if (await isDemo()) return { error: DEMO_MSG };
   const supabase = await requireUser();
   const guard = await requireAdmin();
   if (!guard.ok) return { error: guard.error };
@@ -106,6 +108,7 @@ export async function setItemActive(
   _prev: FormState,
   fd: FormData,
 ): Promise<FormState> {
+  if (await isDemo()) return { error: DEMO_MSG };
   const supabase = await requireUser();
   const guard = await requireAdmin();
   if (!guard.ok) return { error: guard.error };

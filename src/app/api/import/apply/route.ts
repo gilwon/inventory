@@ -1,10 +1,12 @@
 // 같은 파일을 다시 읽고 검증한 뒤 import_apply 로 가져오기를 확정하는 API
 import { getRole } from "@/lib/auth";
+import { DEMO_MSG, isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { UploadError, loadSnapshot, readUpload } from "@/lib/excel/parse";
 import { validateWorkbook } from "@/lib/excel/validate";
 
 export async function POST(request: Request) {
+  if (await isDemo()) return Response.json({ error: DEMO_MSG }, { status: 403 });
   const supabase = await createClient();
   const {
     data: { user },

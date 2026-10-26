@@ -2,12 +2,14 @@
 // 이력 정정 Server Action (반대 방향 이력을 추가하는 RPC만 호출한다)
 
 import { revalidatePath } from "next/cache";
+import { DEMO_MSG, isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { koRpcError } from "../items/common";
 
 export type ReverseResult = { ok: true } | { ok: false; error: string };
 
 export async function reverseMovement(movementId: number): Promise<ReverseResult> {
+  if (await isDemo()) return { ok: false, error: DEMO_MSG };
   if (!Number.isSafeInteger(movementId) || movementId < 1) {
     return { ok: false, error: "잘못된 이력입니다." };
   }

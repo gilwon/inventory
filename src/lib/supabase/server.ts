@@ -3,11 +3,15 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
 import type { Database } from "@/lib/database.types";
+import { createDemoClient } from "@/lib/demo/client";
+import { isDemo } from "@/lib/demo";
 
 // 환경변수는 호출 시점(요청 시점)에 읽는다.
 export async function createClient() {
   // supabase-js 가 세션 만료 확인에 Date.now() 를 쓰므로 요청 시점까지 prerender 를 미룬다.
   await connection();
+  // 데모 모드는 실제 Supabase 대신 메모리 목 클라이언트를 쓴다.
+  if (await isDemo()) return createDemoClient();
   const cookieStore = await cookies();
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -38,4 +38,8 @@
 .u062-go.busy{width:54px;border-radius:27px}
 .u062-go.busy span{opacity:0}
 .u062-go.busy i{opacity:1}
+.u062-demo{align-self:center;width:100%;min-height:44px;margin-top:10px;border:1px solid var(--ux-line);border-radius:14px;background:transparent;color:var(--ux-ink-2);font-size:14px;font-weight:650;transition:background-color .2s,transform .3s var(--ux-spring)}
+.u062-demo:hover{background:var(--ux-surface-2)}
+.u062-demo:active{transform:scale(.97)}
+.u062-demo:focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
 @keyframes u062-spin{to{transform:rotate(360deg)}}

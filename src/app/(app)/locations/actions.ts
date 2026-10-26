@@ -4,6 +4,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
+import { DEMO_MSG, isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, koError, type FormState } from "../items/common";
 
@@ -24,6 +25,7 @@ export async function saveLocation(
   _prev: FormState,
   fd: FormData,
 ): Promise<FormState> {
+  if (await isDemo()) return { error: DEMO_MSG };
   const supabase = await requireUser();
   const guard = await requireAdmin();
   if (!guard.ok) return { error: guard.error };
@@ -64,6 +66,7 @@ export async function setLocationActive(
   _prev: FormState,
   fd: FormData,
 ): Promise<FormState> {
+  if (await isDemo()) return { error: DEMO_MSG };
   const supabase = await requireUser();
   const guard = await requireAdmin();
   if (!guard.ok) return { error: guard.error };

@@ -10,9 +10,11 @@ type Props = {
   formAction: (formData: FormData) => void;
   state: { error: string | null };
   pending: boolean;
+  // 로그인 폼 검증과 무관하게 눌리는 데모 진입 액션
+  demoAction: () => void | Promise<void>;
 };
 
-export function LoginCard({ formAction, state, pending }: Props) {
+export function LoginCard({ formAction, state, pending, demoAction }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const pwRef = useRef<HTMLInputElement>(null);
   const uid = useId();
@@ -120,6 +122,9 @@ export function LoginCard({ formAction, state, pending }: Props) {
         >
           <span>로그인</span>
           <i aria-hidden="true" />
+        </button>
+        <button className="u062-demo" type="submit" formAction={demoAction}>
+          데모로 둘러보기
         </button>
       </form>
     </div>

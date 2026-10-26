@@ -37,9 +37,11 @@ const initial: FormState = { error: null };
 export function ItemForm({
   item,
   photoUrl,
+  demo = false,
 }: {
   item?: ItemValues;
   photoUrl?: string | null;
+  demo?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(saveItem, initial);
   // 생성 시 사진 경로의 폴더가 될 id 는 파일을 고를 때 만든다(렌더 중 난수는 하이드레이션 불일치를 만든다).
@@ -67,6 +69,12 @@ export function ItemForm({
     }
     if (file.size > MAX_PHOTO) {
       setPhotoError("사진은 5MB 이하여야 합니다.");
+      return;
+    }
+    // 데모는 실제 저장소로 올리지 않는다. 저장 시 서버 액션이 DEMO_MSG 로 막는다.
+    if (demo) {
+      setPreview(URL.createObjectURL(file));
+      setPhotoError("데모에서는 저장되지 않습니다.");
       return;
     }
     const folder = item?.id || newId || crypto.randomUUID();

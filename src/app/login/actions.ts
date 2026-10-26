@@ -1,7 +1,9 @@
 "use server";
 // 로그인과 로그아웃 Server Action
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { DEMO_COOKIE } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 
 export type LoginState = { error: string | null };
@@ -16,6 +18,8 @@ export async function login(
     return { error: "이메일과 비밀번호를 입력해 주세요." };
   }
 
+  // 데모 쿠키가 남아 있으면 목 클라이언트가 로그인을 막으므로 먼저 지운다.
+  (await cookies()).delete(DEMO_COOKIE);
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
@@ -29,7 +33,23 @@ export async function login(
   redirect("/");
 }
 
+// 데모 쿠키를 심고 대시보드로 보낸다. 쿠키는 인증이 아니라 목데이터 모드 표시다.
+export async function startDemo() {
+  (await cookies()).set(DEMO_COOKIE, "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+  });
+  redirect("/");
+}
+
+export async function exitDemo() {
+  (await cookies()).delete(DEMO_COOKIE);
+  redirect("/login");
+}
+
 export async function logout() {
+  (await cookies()).delete(DEMO_COOKIE);
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");

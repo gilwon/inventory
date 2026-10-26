@@ -4,6 +4,7 @@
 import { revalidatePath } from "next/cache";
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import { requireAdmin } from "@/lib/auth";
+import { DEMO_MSG, isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, koRpcError, type FormState } from "../../items/common";
 
@@ -22,6 +23,7 @@ export async function createUser(
   _prev: CreateUserState,
   fd: FormData,
 ): Promise<CreateUserState> {
+  if (await isDemo()) return { error: DEMO_MSG };
   const guard = await requireAdmin();
   if (!guard.ok) return { error: guard.error };
 
@@ -71,6 +73,7 @@ export async function setUserRole(
   _prev: FormState,
   fd: FormData,
 ): Promise<FormState> {
+  if (await isDemo()) return { error: DEMO_MSG };
   const guard = await requireAdmin();
   if (!guard.ok) return { error: guard.error };
 

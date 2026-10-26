@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ListSkeleton } from "@/components/lucian/skeleton";
 import { getRole } from "@/lib/auth";
+import { isDemo } from "@/lib/demo";
 import { AdminOnlyNotice } from "../../admin-only-notice";
 import { ItemForm } from "../item-form";
 import { linkCls } from "../common";
@@ -16,7 +17,7 @@ async function NewItemContent() {
         품목 목록
       </Link>
       <h1 className="text-xl font-bold">새 품목</h1>
-      <ItemForm />
+      <ItemForm demo={await isDemo()} />
     </div>
   );
 }

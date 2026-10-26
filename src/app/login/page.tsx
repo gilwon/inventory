@@ -4,7 +4,7 @@
 import { useActionState } from "react";
 import { LoginCard } from "@/components/lucian/login-card";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { login, type LoginState } from "./actions";
+import { login, startDemo, type LoginState } from "./actions";
 
 const initial: LoginState = { error: null };
 
@@ -16,7 +16,12 @@ export default function LoginPage() {
       <div className="fixed right-4 top-4">
         <ThemeToggle />
       </div>
-      <LoginCard formAction={formAction} state={state} pending={pending} />
+      <LoginCard
+        formAction={formAction}
+        state={state}
+        pending={pending}
+        demoAction={startDemo}
+      />
     </main>
   );
 }

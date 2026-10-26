@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ListSkeleton } from "@/components/lucian/skeleton";
 import { getRole } from "@/lib/auth";
+import { isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
@@ -105,7 +106,7 @@ async function ItemDetailContent({
           <h2 id="edit-h" className="font-bold">
             품목 정보 수정
           </h2>
-          <ItemForm item={item} photoUrl={photoUrl} />
+          <ItemForm item={item} photoUrl={photoUrl} demo={await isDemo()} />
         </section>
       ) : (
         <section aria-labelledby="info-h" className={`${cardCls} space-y-2`}>

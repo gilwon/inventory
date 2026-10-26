@@ -2,6 +2,7 @@
 // 일괄 실사 제출 Server Action (record_stocktake RPC 한 번 호출)
 
 import { revalidatePath } from "next/cache";
+import { DEMO_MSG, isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { validateRows } from "@/lib/stocktake";
 import { isUuid, koRpcError } from "../items/common";
@@ -15,6 +16,7 @@ export async function submitStocktake(
   locationId: string,
   rows: unknown,
 ): Promise<StocktakeResult> {
+  if (await isDemo()) return { ok: false, error: DEMO_MSG };
   if (!isUuid(String(locationId))) {
     return { ok: false, error: "위치를 선택해 주세요." };
   }

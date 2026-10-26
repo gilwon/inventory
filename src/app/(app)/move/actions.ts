@@ -1,6 +1,7 @@
 "use server";
 // 품목 검색, 현재 수량 조회, 입고·출고·이동·조정 제출 Server Action
 
+import { DEMO_MSG, isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { koRpcError } from "../items/common";
 
@@ -76,6 +77,7 @@ export async function getStockAction(
 
 // 수량 변경은 RPC만 호출한다. DB 오류 메시지(한국어)를 그대로 돌려준다.
 export async function submitMovement(input: MoveInput): Promise<MoveResult> {
+  if (await isDemo()) return { ok: false, error: DEMO_MSG };
   const { type, itemId, locationId, toLocationId } = input ?? {};
   const qtyText = String(input?.qty ?? "").trim();
   const reason = String(input?.reason ?? "").trim();
