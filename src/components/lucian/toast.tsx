@@ -62,10 +62,8 @@ export function useToast(): ToastApi {
       const id = ++seq.current;
       // 오류는 읽을 시간이 더 필요해 오래 둔다.
       const duration = kind === "err" ? 8000 : 4500;
-      setItems((l) => [
-        { id, kind, title, detail, duration, leaving: false },
-        ...l,
-      ]);
+      // 새 알림이 이전 알림을 대체한다(쌓지 않는다).
+      setItems([{ id, kind, title, detail, duration, leaving: false }]);
     },
     [],
   );
@@ -86,7 +84,6 @@ export function ToastHost({ toast }: { toast: ToastApi }) {
   const lefts = useRef(new Map<number, number>());
   const itemsRef = useRef(items);
   const openRef = useRef(open);
-  const live = items.find((t) => !t.leaving)?.title ?? "";
   const active = items.some((t) => !t.leaving);
 
   useEffect(() => {
@@ -187,9 +184,7 @@ export function ToastHost({ toast }: { toast: ToastApi }) {
           }
         }}
       >
-        <div className="u070-live" aria-live="polite">
-          {live}
-        </div>
+        {/* 낭독은 각 알림의 role(alert·status)만 맡는다. 별도 live 영역은 같은 문구를 두 번 읽게 해서 뺐다. */}
         {items.map((t) => (
           <ToastCard
             key={t.id}

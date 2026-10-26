@@ -28,9 +28,10 @@ async function MoveContent() {
   return <MoveForm locations={locations} />;
 }
 
+// pb-12 는 모바일 하단 탭 바(위쪽 끝이 화면 아래에서 약 127px)가 폼 끝을 가리지 않게 레이아웃의 pb-32 위에 더한 여백이다.
 export default function MovePage() {
   return (
-    <div className="mx-auto max-w-xl space-y-4">
+    <div className="mx-auto max-w-xl space-y-4 pb-12 md:pb-0">
       <h1 className="text-xl font-bold">입출고</h1>
       <Suspense fallback={<ListSkeleton />}>
         <MoveContent />
