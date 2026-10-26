@@ -1,14 +1,14 @@
 // Lucian UX/UI Prompt #041 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#041
 "use client";
-// 모바일(md 미만) 하단 탭 바. 앞 4개 메뉴 + 더보기(나머지와 로그아웃)
+// 모바일(md 미만) 하단 탭 바. tabHrefs 로 고른 메뉴 + 더보기(나머지와 로그아웃)
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { splitTabs } from "@/lib/tabs";
 import { isActive, LOGOUT_ICON, type NavItem } from "./side-rail";
 import "./tab-bar.css";
 
-const MAX_TABS = 4;
 const MORE_ICON = (
   <>
     <circle cx="5.5" cy="12" r="1.7" fill="currentColor" />
@@ -19,9 +19,11 @@ const MORE_ICON = (
 
 export function TabBar({
   items,
+  tabHrefs,
   logoutAction,
 }: {
   items: NavItem[];
+  tabHrefs: readonly string[];
   logoutAction: () => void | Promise<void>;
 }) {
   const pathname = usePathname();
@@ -33,8 +35,7 @@ export function TabBar({
   const xRef = useRef<number | null>(null);
   const vRef = useRef(0);
 
-  const tabs = items.slice(0, MAX_TABS);
-  const more = items.slice(MAX_TABS);
+  const { tabs, more } = splitTabs(items, tabHrefs);
   const moreIdx = tabs.length;
   // 현재 경로가 탭이면 그 번호, 더보기 안의 메뉴이면 더보기 번호, 아니면 -1
   const activeIdx = tabs.some((t) => isActive(pathname, t.href))

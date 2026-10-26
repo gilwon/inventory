@@ -34,7 +34,7 @@ U1(직렬) → U2와 U3 병렬(파일 겹치지 않음) → Advisor 통합 검�
 - 완료 기준. build·tsc·lint·vitest 통과, `grep -rn "dark:" src` 에서 색 변형 0건, 360px 화면 7개 가로 넘침 없음(`/login`과 비로그인 리다이렉트 제외, 로그인이 필요한 화면은 코드로만 확인하고 못 본 것을 보고).
 
 ## U2. 내비게이션 (U3) — U1 이후
-- `src/components/lucian/side-rail.tsx`(#040), `tab-bar.tsx`(#041)를 이식하고 `nav.tsx`/`layout.tsx`에 연결. 메뉴는 현재 항목(대시보드, 품목, 위치, 입출고, 이력, 가져오기/내보내기)과 로그아웃. 현재 경로 강조는 `usePathname`. 하단 탭은 4개 + 더보기(나머지)로 하고 접근성(role, aria-current, 키보드 화살표)을 유지한다. 2차에서 항목이 늘어날 것을 고려해 메뉴 정의는 배열 하나로 둔다.
+- `src/components/lucian/side-rail.tsx`(#040), `tab-bar.tsx`(#041)를 이식하고 `nav.tsx`/`layout.tsx`에 연결. 메뉴는 현재 항목(대시보드, 품목, 위치, 입출고, 이력, 가져오기/내보내기)과 로그아웃. 현재 경로 강조는 `usePathname`. 하단 탭은 `TAB_HREFS`로 고른 4개(대시보드, 품목, 스캔, 입출고. 스캔이 가운데) + 더보기(나머지, 위치 포함)로 하고 접근성(role, aria-current, 키보드 화살표)을 유지한다. 2차에서 항목이 늘어날 것을 고려해 메뉴 정의는 배열 하나로 둔다.
 - 데스크톱(md 이상)은 레일, 모바일은 탭 바. 레이아웃의 `Suspense` 구조와 `AuthGate`는 유지.
 
 ## U3. 화면 요소 (U4~U7) — U1 이후, U2와 병렬

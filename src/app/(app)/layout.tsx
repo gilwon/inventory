@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { ListSkeleton } from "@/components/lucian/skeleton";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { createClient } from "@/lib/supabase/server";
-import { BottomNav, SideNav } from "./nav";
+import { BottomNav, MobileMenu, SideNav } from "./nav";
 
 // proxy.ts 가 1차로 막고, 여기서 getUser 로 한 번 더 확인한다.
 async function AuthGate({ children }: { children: React.ReactNode }) {
@@ -25,8 +25,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </Suspense>
       </aside>
 
-      <header className="flex items-center justify-between border-b border-line bg-surface px-4 py-2 md:hidden">
-        <p className="font-bold">재고 관리</p>
+      <header className="flex items-center gap-2 border-b border-line bg-surface px-4 py-2 md:hidden">
+        <Suspense fallback={<span className="size-11 shrink-0" aria-hidden="true" />}>
+          <MobileMenu />
+        </Suspense>
+        <p className="min-w-0 flex-1 whitespace-nowrap text-2xl font-bold leading-tight">재고 관리</p>
         <ThemeToggle />
       </header>
 

@@ -2,11 +2,12 @@
 // 메뉴 정의(NAV_ITEMS)와 PC 사이드 레일, 모바일 하단 탭 연결
 
 import { logout } from "@/app/login/actions";
+import { HamburgerMenu } from "@/components/lucian/hamburger-menu";
 import { SideRail, type NavItem } from "@/components/lucian/side-rail";
 import { TabBar } from "@/components/lucian/tab-bar";
 
 // 메뉴는 이 배열 하나로 정의한다. 항목을 추가하면 레일과 탭에 모두 반영된다.
-// 모바일 탭은 앞 4개만 보이고 나머지는 더보기(로그아웃 포함)로 들어간다.
+// 모바일 탭은 TAB_HREFS 의 4개만 보이고 나머지는 더보기(로그아웃 포함)로 들어간다.
 export const NAV_ITEMS: NavItem[] = [
   {
     href: "/",
@@ -104,6 +105,9 @@ export const NAV_ITEMS: NavItem[] = [
   },
 ];
 
+// 하단 탭에 올릴 경로와 순서. 3번째(스캔)가 5칸 중 가운데다.
+export const TAB_HREFS = ["/", "/items", "/scan", "/move"];
+
 // PC 화면(md 이상) 좌측 사이드 레일
 export function SideNav() {
   return <SideRail items={NAV_ITEMS} logoutAction={logout} />;
@@ -111,5 +115,10 @@ export function SideNav() {
 
 // 모바일 화면(md 미만) 하단 탭 바
 export function BottomNav() {
-  return <TabBar items={NAV_ITEMS} logoutAction={logout} />;
+  return <TabBar items={NAV_ITEMS} tabHrefs={TAB_HREFS} logoutAction={logout} />;
+}
+
+// 모바일 화면(md 미만) 헤더의 햄버거 메뉴(NAV_ITEMS 전체와 로그아웃)
+export function MobileMenu() {
+  return <HamburgerMenu items={NAV_ITEMS} logoutAction={logout} />;
 }
