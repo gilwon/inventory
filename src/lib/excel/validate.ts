@@ -61,6 +61,14 @@ export function validateWorkbook(
   };
 }
 
+// DB 길이 CHECK(0006)와 같은 한도. 넘는 열이 있으면 첫 번째의 오류 문구를 돌려준다.
+function lengthError(cols: Array<[string, string, number]>): string | null {
+  for (const [name, value, max] of cols) {
+    if (value.length > max) return `${name}이(가) 너무 깁니다 (최대 ${max}자)`;
+  }
+  return null;
+}
+
 function validateLocations(list: LocationRow[], snap: Snapshot): RowResult[] {
   const results: RowResult[] = [];
   const seen = new Set<string>();
@@ -74,6 +82,13 @@ function validateLocations(list: LocationRow[], snap: Snapshot): RowResult[] {
   for (const l of list) {
     if (!l.code || !l.name) {
       push(l, "error", !l.code ? "코드가 비어 있습니다" : "이름이 비어 있습니다");
+      continue;
+    }
+    const tooLong = lengthError(
+      [["코드", l.code, 50], ["이름", l.name, 100]],
+    );
+    if (tooLong) {
+      push(l, "error", tooLong);
       continue;
     }
     const k = key(l.code);
@@ -140,6 +155,17 @@ function validateItems(
 
     if (!it.sku || !it.name) {
       fail(!it.sku ? "SKU가 비어 있습니다" : "이름이 비어 있습니다");
+      continue;
+    }
+    const tooLong = lengthError([
+      ["SKU", it.sku, 100],
+      ["이름", it.name, 200],
+      ["바코드", it.barcode, 100],
+      ["단위", it.unit, 20],
+      ["메모", it.memo, 2000],
+    ]);
+    if (tooLong) {
+      fail(tooLong);
       continue;
     }
     const sk = key(it.sku);

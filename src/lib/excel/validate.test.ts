@@ -135,4 +135,12 @@ describe("validateWorkbook", () => {
     const r = run({ locations: [loc(2, "A", "B"), loc(3, "B", "A")] });
     expect(r.rows.map((x) => x.status)).toEqual(["error", "error"]);
   });
+  it("DB 길이 한도를 넘는 값은 행 오류로 막는다", () => {
+    const r = run({
+      locations: [{ row: 2, code: "A".repeat(51), name: "창고", parentCode: "" }],
+      items: [item(2, { sku: "S".repeat(101) }), item(3, { sku: "S2", unit: "u".repeat(21) })],
+    });
+    expect(r.rows.map((x) => x.status)).toEqual(["error", "error", "error"]);
+    expect(r.rows.map((x) => x.reason).join("|")).toContain("너무 깁니다");
+  });
 });
