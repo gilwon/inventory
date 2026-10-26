@@ -143,3 +143,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+/* 크롬의 기본 당겨서 새로고침이 PullToRefresh 와 겹쳐 뜨지 않게 한다. */
+html {
+  overscroll-behavior-y: contain;
+}

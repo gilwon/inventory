@@ -2,6 +2,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { PullToRefresh } from "@/components/lucian/pull-to-refresh";
 import { ListSkeleton } from "@/components/lucian/skeleton";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { createClient } from "@/lib/supabase/server";
@@ -43,14 +44,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <ThemeToggle />
       </header>
 
-      <main className="min-w-0 flex-1 p-4 pb-32 md:p-6 md:pb-6">
+      <PullToRefresh className="min-w-0 flex-1 p-4 pb-32 md:p-6 md:pb-6">
         <div className="mb-2 hidden justify-end md:flex">
           <ThemeToggle />
         </div>
         <Suspense fallback={<ListSkeleton />}>
           <AuthGate>{children}</AuthGate>
         </Suspense>
-      </main>
+      </PullToRefresh>
 
       <Suspense fallback={null}>
         <BottomNav />

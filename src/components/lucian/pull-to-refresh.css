@@ -1,0 +1,23 @@
+/* Lucian UX/UI Prompt #085 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#085 */
+/* 당겨서 새로고침 스타일. 요소 CSS는 .u085 범위를 유지한다.
+   원본의 고정 크기 래퍼·상단 바·새로고침 버튼·목록·더미 항목은 뺐고, 목록이 따라 내려오던 동작은 본문(.u085-body)이 한다.
+   인디케이터와 문구는 화면에 고정(fixed)하고 모바일 헤더 아래(--ptr-top)에서 시작한다. 헤더(z-30) 아래, 탭 바와는 겹치지 않는다. */
+.u085{--pull:0;--ptr-top:64px;display:contents}
+.u085-ind{position:fixed;z-index:20;pointer-events:none;left:50%;top:calc(var(--ptr-top) + 10px);width:40px;height:40px;margin-left:-20px;border-radius:50%;display:grid;place-items:center;background:var(--ux-surface);box-shadow:0 6px 16px -6px var(--ux-shadow-strong),0 0 0 1px var(--ux-line);opacity:min(1,calc(var(--pull) / 30));transform:translateY(calc(min(var(--pull),90) * 1px - 50px)) rotate(calc(var(--pull) * 3deg))}
+.u085-ind svg{width:24px;height:24px;transform:rotate(-90deg)}
+.u085-ind circle{fill:none;stroke:var(--ux-accent);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:calc(100 - min(1,var(--pull) / 70) * 82)}
+.u085-ind path{fill:var(--ux-accent);opacity:min(1,calc(var(--pull) / 70))}
+.u085.is-ready .u085-ind{background:var(--ux-accent)}
+.u085.is-ready .u085-ind circle{stroke:var(--ux-accent-ink)}
+.u085.is-ready .u085-ind path{fill:var(--ux-accent-ink)}
+.u085.is-load .u085-ind{opacity:1;transform:translateY(20px);transition:transform .4s var(--ux-spring)}
+.u085.is-load .u085-ind svg{animation:u085-spin .8s linear infinite}
+.u085.is-load .u085-ind circle{stroke-dashoffset:30;stroke:var(--ux-accent)}
+.u085.is-load .u085-ind path{opacity:0}
+.u085.is-load.is-ready .u085-ind{background:var(--ux-surface)}
+@keyframes u085-spin{to{transform:rotate(270deg)}}
+.u085-msg{position:fixed;z-index:20;pointer-events:none;left:0;right:0;top:calc(var(--ptr-top) + 54px);text-align:center;font-size:12px;font-weight:700;color:var(--ux-ink-3);opacity:min(1,calc((var(--pull) - 30) / 30));transform:translateY(calc(min(var(--pull),90) * 1px - 50px))}
+/* 본문의 transform 은 당기는 동안에만 인라인으로 걸린다. 평소에는 none 이라 안쪽 fixed 요소에 영향이 없다. */
+.u085.rel .u085-body,.u085.rel .u085-ind,.u085.rel .u085-msg{transition:transform .5s var(--ux-spring),opacity .3s}
+/* 데스크톱에서는 제스처를 걸지 않으므로 인디케이터도 숨긴다. */
+@media (min-width:768px){.u085-ind,.u085-msg{display:none}}
