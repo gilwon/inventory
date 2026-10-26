@@ -174,7 +174,44 @@ export function ImportPanel() {
             </p>
           )}
 
-          <div className="max-w-full overflow-x-auto rounded-md border border-zinc-300 dark:border-zinc-700">
+          {/* md 미만은 카드 목록, md 이상은 표 */}
+          <ul className="space-y-2 md:hidden" aria-label="가져오기 미리보기">
+            {sorted.map((r) => (
+              <li
+                key={`${r.sheet}-${r.row}`}
+                className="rounded-md border border-zinc-300 p-3 text-sm dark:border-zinc-700"
+              >
+                <dl className="space-y-1">
+                  <div className="flex gap-2">
+                    <dt className="w-12 shrink-0 font-semibold">시트·행</dt>
+                    <dd className="min-w-0">
+                      {r.sheet} · {r.row}
+                    </dd>
+                  </div>
+                  <div className="flex gap-2">
+                    <dt className="w-12 shrink-0 font-semibold">대상</dt>
+                    <dd className="min-w-0 break-all">{r.label}</dd>
+                  </div>
+                  <div className="flex gap-2">
+                    <dt className="w-12 shrink-0 font-semibold">상태</dt>
+                    <dd className="min-w-0">
+                      <span
+                        className={`inline-block whitespace-nowrap rounded px-2 py-0.5 text-xs font-semibold ${STATUS[r.status].cls}`}
+                      >
+                        {STATUS[r.status].label}
+                      </span>
+                    </dd>
+                  </div>
+                  <div className="flex gap-2">
+                    <dt className="w-12 shrink-0 font-semibold">사유</dt>
+                    <dd className="min-w-0 break-words">{r.reason}</dd>
+                  </div>
+                </dl>
+              </li>
+            ))}
+          </ul>
+
+          <div className="hidden max-w-full overflow-x-auto rounded-md border border-zinc-300 md:block dark:border-zinc-700">
             <table className="w-full min-w-[32rem] text-left text-sm">
               <caption className="sr-only">가져오기 미리보기</caption>
               <thead className="bg-zinc-100 dark:bg-zinc-800">

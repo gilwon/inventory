@@ -3,6 +3,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { koRpcError } from "../items/common";
 
 export type ReverseResult = { ok: true } | { ok: false; error: string };
 
@@ -14,7 +15,7 @@ export async function reverseMovement(movementId: number): Promise<ReverseResult
   const { error } = await supabase.rpc("reverse_movement", {
     p_movement_id: movementId,
   });
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: koRpcError(error) };
   revalidatePath("/history");
   return { ok: true };
 }

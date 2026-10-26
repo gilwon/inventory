@@ -2,6 +2,7 @@
 // 품목 검색, 현재 수량 조회, 입고·출고·이동·조정 제출 Server Action
 
 import { createClient } from "@/lib/supabase/server";
+import { koRpcError } from "../items/common";
 
 export type ItemHit = {
   id: string;
@@ -91,7 +92,7 @@ export async function submitMovement(input: MoveInput): Promise<MoveResult> {
       type === "receive" ? "record_receive" : "record_issue",
       { p_item_id: itemId, p_location_id: locationId, p_qty: qty, p_reason: reasonArg },
     );
-    return error ? { ok: false, error: error.message } : { ok: true };
+    return error ? { ok: false, error: koRpcError(error) } : { ok: true };
   }
 
   if (type === "transfer") {
@@ -108,7 +109,7 @@ export async function submitMovement(input: MoveInput): Promise<MoveResult> {
       p_qty: qty,
       p_reason: reasonArg,
     });
-    return error ? { ok: false, error: error.message } : { ok: true };
+    return error ? { ok: false, error: koRpcError(error) } : { ok: true };
   }
 
   if (type === "adjust") {
@@ -119,7 +120,7 @@ export async function submitMovement(input: MoveInput): Promise<MoveResult> {
       p_actual_qty: qty,
       p_reason: reason,
     });
-    if (error) return { ok: false, error: error.message };
+    if (error) return { ok: false, error: koRpcError(error) };
     return { ok: true, unchanged: data === 0 };
   }
 

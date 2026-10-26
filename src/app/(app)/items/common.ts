@@ -27,6 +27,14 @@ export function koError(e: { message: string; code?: string }): string {
   return "저장에 실패했습니다. 잠시 후 다시 시도해 주세요.";
 }
 
+// RPC 오류는 한글 문구만 그대로 보여 주고, 그 외(DB 원문)는 일반 문구로 바꾼다.
+export function koRpcError(e: { message: string }): string {
+  const m = e.message ?? "";
+  return /[가-힣]/.test(m)
+    ? m
+    : "처리에 실패했습니다. 잠시 후 다시 시도해 주세요.";
+}
+
 export const focusRing =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:focus-visible:ring-blue-400";
 export const inputCls = `block w-full min-w-0 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100 ${focusRing}`;
