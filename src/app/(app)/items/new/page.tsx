@@ -6,14 +6,14 @@ import { getRole } from "@/lib/auth";
 import { isDemo } from "@/lib/demo";
 import { AdminOnlyNotice } from "../../admin-only-notice";
 import { ItemForm } from "../item-form";
-import { linkCls } from "../common";
+import { btnSecondary } from "../common";
 
 async function NewItemContent() {
   if ((await getRole()) !== "admin")
     return <AdminOnlyNotice href="/items" linkLabel="품목 목록으로 가기" />;
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <Link href="/items" className={`${linkCls} inline-flex min-h-11 items-center`}>
+      <Link href="/items" className={btnSecondary}>
         품목 목록
       </Link>
       <h1 className="text-xl font-bold">새 품목</h1>

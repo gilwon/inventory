@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { saveItem } from "./actions";
 import {
   btnPrimary,
+  cardCls,
   inputCls,
   type FormState,
 } from "./common";
@@ -105,7 +106,7 @@ export function ItemForm({
           : "selected";
 
   return (
-    <form action={formAction} className="max-w-xl space-y-4">
+    <form action={formAction} className={`${cardCls} space-y-4`}>
       <input type="hidden" name="mode" value={item ? "update" : "create"} />
       {item && <input type="hidden" name="id" value={item.id} />}
       {!item && newId && <input type="hidden" name="new_id" value={newId} />}

@@ -10,7 +10,7 @@ import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
 import { ActiveToggle } from "../active-toggle";
 import { setItemActive } from "../actions";
-import { badgeCls, cardCls, isUuid, linkCls } from "../common";
+import { badgeCls, btnSecondary, cardCls, isUuid, linkCls } from "../common";
 import { ItemForm } from "../item-form";
 
 const TYPE_LABEL: Record<string, string> = {
@@ -65,7 +65,7 @@ async function ItemDetailContent({
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="space-y-2">
-        <Link href="/items" className={`${linkCls} inline-flex min-h-11 items-center`}>
+        <Link href="/items" className={btnSecondary}>
           품목 목록
         </Link>
         <div className="flex flex-wrap items-center gap-2">
