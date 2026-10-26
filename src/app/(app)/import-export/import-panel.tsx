@@ -1,7 +1,8 @@
 "use client";
 // 파일 선택, 미리보기 표, 가져오기 확정을 맡는 클라이언트 컴포넌트
 
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { FileDrop, type FileDropStatus } from "@/components/lucian/file-drop";
 import { InlineAlert } from "@/components/lucian/inline-alert";
 
 type RowStatus = "new" | "update" | "existing" | "ignored" | "error";
@@ -56,7 +57,6 @@ async function readJson(res: Response) {
 }
 
 export function ImportPanel() {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [rows, setRows] = useState<Row[] | null>(null);
   const [hasError, setHasError] = useState(false);
@@ -112,7 +112,6 @@ export function ImportPanel() {
         setResult(data.result);
         setRows(null);
         setFile(null);
-        if (inputRef.current) inputRef.current.value = "";
       }
     } catch {
       setMessage("서버에 연결하지 못했습니다");
@@ -126,24 +125,38 @@ export function ImportPanel() {
         (a, b) => Number(b.status === "error") - Number(a.status === "error"),
       )
     : [];
+  // 파일 영역에 보일 실제 단계. 미리보기 요청 중, 실패(표 없이 메시지), 완료(표 있음) 순이다.
+  const dropStatus: FileDropStatus = !file
+    ? "idle"
+    : busy === "preview"
+      ? "working"
+      : message && !rows
+        ? "error"
+        : rows
+          ? "done"
+          : "selected";
   const count = (s: RowStatus) => rows?.filter((r) => r.status === s).length ?? 0;
 
   return (
     <div className="space-y-4">
-      <div>
-        <label htmlFor="import-file" className="mb-1 block text-sm font-medium">
-          엑셀 파일(.xlsx)
-        </label>
-        <input
-          ref={inputRef}
-          id="import-file"
-          type="file"
-          accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          disabled={busy !== null}
-          onChange={(e) => onPick(e.target.files?.[0] ?? null)}
-          className={`block w-full max-w-full rounded-xl border border-ink-3 bg-surface p-2 text-sm file:mr-3 file:rounded file:border-0 file:bg-surface-3 file:px-3 file:py-2 file:text-sm file:font-medium file:text-ink ${focus}`}
-        />
-      </div>
+      <FileDrop
+        id="import-file"
+        accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        disabled={busy !== null}
+        label="엑셀 파일(.xlsx)을 끌어다 놓거나"
+        action="눌러서 고르세요"
+        hint=".xlsx 파일 1개"
+        file={file}
+        status={dropStatus}
+        statusText={
+          dropStatus === "working"
+            ? "미리보기 만드는 중"
+            : dropStatus === "done"
+              ? "미리보기 완료"
+              : undefined
+        }
+        onFile={onPick}
+      />
 
       <div role="status" aria-live="polite" className="space-y-2">
         {busy === "preview" && <p className="text-sm">미리보기를 만드는 중입니다...</p>}

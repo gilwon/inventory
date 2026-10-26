@@ -1,0 +1,52 @@
+/* Lucian UX/UI Prompt #032 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#032 */
+/* 끌어다 놓는 업로드 스타일. 요소 CSS는 .u032 범위를 유지하고 모션 값(행진 점선, 스프링, 체크 그리기)은 원본 그대로다.
+   보정 1. 루트 340x420 고정 크기를 폭 100%·max-width 100%, 높이 자동으로 바꿨다.
+   보정 2. 영역 높이 196px 고정을 min-height로 바꿔 긴 문구가 넘치지 않게 했다.
+   보정 3. 영역을 button에서 실제 파일 입력에 연결된 label로 바꾸고, 입력은 숨기지 않고 시각적으로만 가린다(포커스 링은 입력 옆 형제 선택자로 영역에 그린다).
+   보정 4. 가짜 진행률 막대와 목록 3개 제한을 뺐다. 파일 1개의 실제 단계만 보인다.
+   보정 5. 목록 행 높이를 min-height 62px로, 다시 시도·제거 버튼을 터치 대상 44px로 키웠다. */
+.u032{position:relative;width:100%;max-width:100%}
+.u032-zone{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;max-width:100%;min-height:196px;padding:20px 16px;border-radius:26px;background:var(--ux-surface);color:var(--ux-ink);cursor:pointer;
+  transition:transform .5s var(--ux-spring),background-color .3s var(--ux-ease)}
+.u032-file:focus-visible+.u032-zone{outline:2px solid var(--ux-accent);outline-offset:4px}
+.u032-zone svg.u032-dash{position:absolute;left:1px;top:1px;width:calc(100% - 2px);height:calc(100% - 2px);overflow:visible;pointer-events:none}
+.u032-dash rect{fill:none;stroke:var(--ux-line-2);stroke-width:2;stroke-dasharray:8 7;transition:stroke .3s var(--ux-ease)}
+.u032-zone:hover .u032-dash rect,.u032.is-over .u032-dash rect{stroke:var(--ux-accent);animation:u032-march .9s linear infinite}
+@keyframes u032-march{to{stroke-dashoffset:-30}}
+.u032.is-over .u032-zone{transform:scale(1.03);background:color-mix(in srgb,var(--ux-accent) 7%,var(--ux-surface))}
+.u032-orb{width:60px;height:60px;border-radius:20px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,#5B8CFF,#8B6CFF);box-shadow:0 16px 28px -14px rgba(91,108,255,.8);transition:transform .5s var(--ux-spring)}
+.u032-orb svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.u032-zone:hover .u032-orb{transform:translateY(-4px)}
+.u032.is-over .u032-orb{transform:translateY(-8px) scale(1.1) rotate(-6deg)}
+.u032-zone b{margin-top:14px;font-size:15.5px;font-weight:720;letter-spacing:-.02em}
+.u032-zone b em{font-style:normal;color:var(--ux-accent)}
+.u032-zone small{margin-top:4px;font-size:12.5px;color:var(--ux-ink-2)}
+.u032.is-off .u032-zone{cursor:not-allowed;opacity:.55}
+.u032.is-off .u032-zone:hover .u032-dash rect{stroke:var(--ux-line-2);animation:none}
+.u032.is-off .u032-zone:hover .u032-orb{transform:none}
+.u032-file{position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;overflow:hidden}
+.u032-note{margin:10px 0 0;font-size:12.5px;color:var(--ux-ink-2)}
+.u032-list:empty{display:none}
+.u032-list{margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.u032-row{position:relative;display:flex;align-items:center;gap:12px;min-height:62px;padding:9px 12px;border-radius:18px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line);overflow:hidden;animation:u032-in .5s var(--ux-spring)}
+@keyframes u032-in{from{transform:translateY(-10px) scale(.96);opacity:0}}
+.u032-ic{width:36px;height:40px;flex:none;border-radius:9px;display:grid;place-items:end center;padding-bottom:5px;font-size:8.5px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--c)}
+.u032-meta{flex:1;min-width:0}
+.u032-meta b{display:block;font-size:14px;font-weight:660;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.u032-meta small{display:block;margin-top:3px;font-size:12px;color:var(--ux-ink-2);font-variant-numeric:tabular-nums}
+.u032-st{width:30px;height:30px;flex:none;border-radius:50%;display:grid;place-items:center}
+.u032-st svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.u032-row.done .u032-st{background:var(--ux-mint);color:var(--ux-accent-ink);animation:u032-pop .45s var(--ux-spring)}
+@keyframes u032-pop{from{transform:scale(.3)}}
+.u032-row.done .u032-st path{stroke-dasharray:16;stroke-dashoffset:16;animation:u032-draw .4s var(--ux-ease) .15s forwards}
+@keyframes u032-draw{to{stroke-dashoffset:0}}
+.u032-row.fail .u032-meta small{color:var(--ux-danger)}
+.u032-retry{min-height:44px;margin-top:6px;padding:0 14px;border:0;border-radius:12px;background:color-mix(in srgb,var(--ux-danger) 12%,transparent);color:var(--ux-danger);font-size:12.5px;font-weight:700;white-space:nowrap}
+.u032-retry:focus-visible{outline:2px solid var(--ux-danger);outline-offset:2px}
+.u032-rm{width:44px;height:44px;flex:none;border:0;border-radius:12px;display:grid;place-items:center;background:var(--ux-surface-2);color:var(--ux-ink-2);transition:transform .3s var(--ux-spring),color .3s}
+.u032-rm svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.u032-rm:hover{color:var(--ux-ink)}
+.u032-rm:active{transform:scale(.92)}
+.u032-rm:disabled{opacity:.45;cursor:not-allowed}
+.u032-spin{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--ux-surface-3);border-top-color:var(--ux-accent);animation:u032-rot .8s linear infinite}
+@keyframes u032-rot{to{transform:rotate(360deg)}}

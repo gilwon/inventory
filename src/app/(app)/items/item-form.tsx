@@ -2,6 +2,7 @@
 // 품목 생성·수정 폼 (사진은 검증 후 저장소에 직접 올리고 경로만 서버로 보낸다)
 
 import { useActionState, useState } from "react";
+import { FileDrop, type FileDropStatus } from "@/components/lucian/file-drop";
 import { InlineAlert } from "@/components/lucian/inline-alert";
 import { createClient } from "@/lib/supabase/client";
 import { saveItem } from "./actions";
@@ -47,20 +48,25 @@ export function ItemForm({
   const [preview, setPreview] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  // 파일 영역에 보일 선택 파일(제거하면 선택만 비운다)
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
-  async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  async function onFile(file: File | null) {
     setPhotoError(null);
-    if (!file) return;
+    setPhotoFile(file);
+    if (!file) {
+      // 제거. 이번에 고른 사진만 취소하고, 이미 저장된 사진(photoUrl)은 건드리지 않는다.
+      setPhotoPath("");
+      setPreview(null);
+      return;
+    }
     const ext = EXT[file.type];
     if (!ext) {
       setPhotoError("JPEG, PNG, WebP, GIF, HEIC 이미지만 올릴 수 있습니다.");
-      e.target.value = "";
       return;
     }
     if (file.size > MAX_PHOTO) {
       setPhotoError("사진은 5MB 이하여야 합니다.");
-      e.target.value = "";
       return;
     }
     const folder = item?.id || newId || crypto.randomUUID();
@@ -72,7 +78,6 @@ export function ItemForm({
     setUploading(false);
     if (error) {
       setPhotoError("사진을 올리지 못했습니다. 다시 시도해 주세요.");
-      e.target.value = "";
       return;
     }
     if (!item) setNewId(folder);
@@ -81,6 +86,15 @@ export function ItemForm({
   }
 
   const shownPhoto = preview ?? photoUrl ?? null;
+  const dropStatus: FileDropStatus = !photoFile
+    ? "idle"
+    : uploading
+      ? "working"
+      : photoError
+        ? "error"
+        : photoPath
+          ? "done"
+          : "selected";
 
   return (
     <form action={formAction} className="max-w-xl space-y-4">
@@ -154,9 +168,6 @@ export function ItemForm({
       </Field>
 
       <div className="space-y-2">
-        <label htmlFor="photo" className="block text-sm font-medium">
-          사진 (선택, 이미지 1장, 5MB 이하)
-        </label>
         {shownPhoto && (
           // 서명 URL 과 blob 미리보기라 next/image 최적화 대상이 아니다.
           // eslint-disable-next-line @next/next/no-img-element
@@ -166,12 +177,23 @@ export function ItemForm({
             className="h-40 w-40 max-w-full rounded-xl border border-line object-cover"
           />
         )}
-        <input
+        <FileDrop
           id="photo"
-          type="file"
           accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
-          onChange={onFile}
-          className={`block w-full min-w-0 text-sm file:mr-3 file:min-h-11 file:rounded-xl file:border file:border-ink-3 file:bg-surface file:px-3 file:text-ink`}
+          disabled={uploading}
+          label="사진을 끌어다 놓거나"
+          action="눌러서 고르세요"
+          hint="선택 사항 · 이미지 1장, 5MB 이하"
+          file={photoFile}
+          status={dropStatus}
+          statusText={
+            dropStatus === "working"
+              ? "올리는 중"
+              : dropStatus === "done"
+                ? "올렸습니다"
+                : undefined
+          }
+          onFile={onFile}
         />
         {uploading && <p className="text-sm">사진을 올리는 중...</p>}
         {photoError && (
