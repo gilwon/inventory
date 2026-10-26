@@ -1,6 +1,7 @@
 // 이력 목록 화면 (필터는 URL로 유지, 50건 페이지네이션, 이동 묶음 표시, 정정 버튼)
 import Link from "next/link";
 import { Suspense } from "react";
+import { DateRange } from "@/components/lucian/date-range";
 import { EmptyState } from "@/components/lucian/empty-state";
 import { InlineAlert } from "@/components/lucian/inline-alert";
 import { ListSkeleton } from "@/components/lucian/skeleton";
@@ -188,13 +189,8 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
         action="/history"
         className="grid grid-cols-1 gap-3 rounded-2xl border border-line bg-surface p-3 sm:grid-cols-2 lg:grid-cols-3"
       >
-        <div className="space-y-1">
-          <label htmlFor="f-from" className="block text-sm font-medium">시작일</label>
-          <input id="f-from" name="from" type="date" defaultValue={from} className={field} />
-        </div>
-        <div className="space-y-1">
-          <label htmlFor="f-to" className="block text-sm font-medium">종료일</label>
-          <input id="f-to" name="to" type="date" defaultValue={to} className={field} />
+        <div className="col-span-full">
+          <DateRange key={`${from}~${to}`} from={from} to={to} />
         </div>
         <div className="space-y-1">
           <label htmlFor="f-q" className="block text-sm font-medium">품목 (SKU, 이름, 바코드)</label>

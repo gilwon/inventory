@@ -42,6 +42,10 @@ U1(직렬) → U2와 U3 병렬(파일 겹치지 않음) → Advisor 통합 검�
 - 로그인은 `login/actions.ts`의 `useActionState` 결과에 연결하고 성공은 서버 redirect를 따른다. 토스트는 앱 전역 provider 없이 `move-form` 안 상태로 시작해도 되지만 2차에서 재사용하도록 `toast.tsx`에 `useToast` 훅을 둔다.
 - 빈 상태와 스켈레톤은 `(app)` 화면의 Suspense fallback과 빈 목록 문구에 적용한다(데이터 표 자체는 바꾸지 않는다).
 
+## U4. 파일 선택·기간 선택 (U9, U10) — 사용자 요청으로 추가
+- `src/components/lucian/file-drop.tsx`(#032)를 `import-panel.tsx`의 엑셀 입력과 `items/item-form.tsx`의 사진 입력에 연결한다. 단일 파일, 기존 `onPick`/`onFile` 로직과 검증은 그대로.
+- `src/components/lucian/date-range.tsx`(#030)를 `history/page.tsx` 필터의 시작일·종료일에 연결한다. 서버 컴포넌트 안의 GET 폼이므로 클라이언트 컴포넌트가 숨은 `from`·`to` 입력을 렌더한다.
+
 ## 검증 총괄 (Advisor)
 - diff 읽기, build·tsc·lint·vitest, grep으로 `dark:` 색과 zinc 잔존 확인.
 - 브라우저. 로그인은 사용자가 직접(작업 공간 5 유지). 360/480/1024/1440에서 주요 화면 캡처, 라이트·다크(`prefers-color-scheme` 에뮬레이션), 키보드 포커스, reduced-motion 에뮬레이션.
@@ -63,6 +67,8 @@ U1(직렬) → U2와 U3 병렬(파일 겹치지 않음) → Advisor 통합 검�
 - U3. 입출고 문구 "입고을"을 "입고를"로 고쳤다.
 - 토스트 모바일 위치는 탭 바 위로 136px로 올렸고, reduced-motion에서 `transition-delay`도 0으로 한다. `(app)/layout.tsx` fallback은 ListSkeleton이다.
 - 테마 전환. `src/components/theme-toggle.tsx`(시스템·라이트·다크 버튼 묶음)를 추가했다. 모바일은 헤더 오른쪽, 데스크톱은 본문 위 오른쪽, 로그인은 오른쪽 위에 둔다. 루트 레이아웃 `<head>`의 초기화 스크립트가 첫 페인트 전에 저장값을 적용하고 `<html>`에 `suppressHydrationWarning`을 둔다. 설정은 기기별 브라우저 저장이라 계정에 따라가지 않는다.
+- U4. 파일 선택(#032)은 호출부가 선택 파일을 쥐는 제어형이고 가짜 진행률 대신 실제 단계만 보인다. 끌어다 놓은 파일은 `accept` 검사를 거치지 않으며(엑셀은 서버 응답 오류, 사진은 기존 확장자 검사가 거름) 사진 제거는 이번에 올린 경로와 미리보기만 비우고 이미 저장된 사진은 건드리지 않는다.
+- U4. 기간 선택(#030)은 폼 안에서 접고 펼치며 숨은 `from`·`to` 입력을 낸다. 데모의 오늘 이전 비활성화와 숙박 요약·요금은 뺐고, 시작일만 있을 때 같은 날을 다시 누르면 하루 기간이 된다. 루트 폭은 `100%`에 `max-width:350px`, 날짜 칸 높이는 44px(360px에서 가로는 약 38px)다. 날짜 계산은 `src/lib/date-range.ts`에 분리했다.
 
 ## 위험
 - 이식 요소의 모션이 느린 휴대폰에서 거슬릴 수 있다. 데이터 화면에는 모션을 넣지 않는다.
