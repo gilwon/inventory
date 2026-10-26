@@ -1,87 +1,68 @@
 "use client";
-// 모바일 하단 탭과 PC 좌측 내비게이션
+// 메뉴 정의(NAV_ITEMS)와 PC 사이드 레일, 모바일 하단 탭 연결
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { logout } from "@/app/login/actions";
+import { SideRail, type NavItem } from "@/components/lucian/side-rail";
+import { TabBar } from "@/components/lucian/tab-bar";
 
-const MAIN = [
-  { href: "/", label: "대시보드" },
-  { href: "/items", label: "품목" },
-  { href: "/locations", label: "위치" },
-  { href: "/move", label: "입출고" },
-  { href: "/history", label: "이력" },
+// 메뉴는 이 배열 하나로 정의한다. 항목을 추가하면 레일과 탭에 모두 반영된다.
+// 모바일 탭은 앞 4개만 보이고 나머지는 더보기(로그아웃 포함)로 들어간다.
+export const NAV_ITEMS: NavItem[] = [
+  {
+    href: "/",
+    label: "대시보드",
+    icon: <path d="M4 11l8-6.5 8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z" />,
+  },
+  {
+    href: "/items",
+    label: "품목",
+    icon: (
+      <>
+        <rect x="4" y="4" width="7" height="7" rx="2" />
+        <rect x="13" y="4" width="7" height="7" rx="2" />
+        <rect x="4" y="13" width="7" height="7" rx="2" />
+        <rect x="13" y="13" width="7" height="7" rx="2" />
+      </>
+    ),
+  },
+  {
+    href: "/locations",
+    label: "위치",
+    icon: (
+      <>
+        <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" />
+        <circle cx="12" cy="10" r="2.3" />
+      </>
+    ),
+  },
+  {
+    href: "/move",
+    label: "입출고",
+    icon: <path d="M7 4v14M7 4L4 7M7 4l3 3M17 20V6M17 20l-3-3M17 20l3-3" />,
+  },
+  {
+    href: "/history",
+    label: "이력",
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M12 7.5V12l3 2" />
+      </>
+    ),
+  },
+  {
+    href: "/import-export",
+    label: "가져오기/내보내기",
+    icon: <path d="M12 4v11M12 15l-4-4M12 15l4-4M5 19.5h14" />,
+  },
 ];
-const MORE = { href: "/import-export", label: "가져오기/내보내기" };
 
-function isActive(pathname: string, href: string) {
-  return href === "/" ? pathname === "/" : pathname.startsWith(href);
-}
-
-const focus =
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
-
-// PC 화면(md 이상) 좌측 내비
+// PC 화면(md 이상) 좌측 사이드 레일
 export function SideNav() {
-  const pathname = usePathname();
-  return (
-    <nav aria-label="주 메뉴" className="flex flex-col gap-1">
-      {[...MAIN, MORE].map((l) => (
-        <Link
-          key={l.href}
-          href={l.href}
-          aria-current={isActive(pathname, l.href) ? "page" : undefined}
-          className={`rounded-xl px-3 py-2 text-sm font-medium text-ink-2 hover:bg-surface-2 aria-[current=page]:bg-accent-soft aria-[current=page]:text-ink ${focus}`}
-        >
-          {l.label}
-        </Link>
-      ))}
-    </nav>
-  );
+  return <SideRail items={NAV_ITEMS} logoutAction={logout} />;
 }
 
-// 모바일 화면(md 미만) 하단 탭
+// 모바일 화면(md 미만) 하단 탭 바
 export function BottomNav() {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const tab = `flex min-h-14 flex-1 items-center justify-center px-1 text-xs font-medium text-ink-2 aria-[current=page]:text-accent aria-[current=page]:underline ${focus}`;
-
-  return (
-    <nav
-      aria-label="주 메뉴"
-      className="fixed inset-x-0 bottom-0 z-10 border-t border-line bg-surface md:hidden"
-    >
-      {open && (
-        <Link
-          href={MORE.href}
-          onClick={() => setOpen(false)}
-          aria-current={isActive(pathname, MORE.href) ? "page" : undefined}
-          className={`block border-b border-line px-4 py-3 text-sm font-medium text-ink ${focus}`}
-        >
-          {MORE.label}
-        </Link>
-      )}
-      <div className="flex">
-        {MAIN.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            onClick={() => setOpen(false)}
-            aria-current={isActive(pathname, l.href) ? "page" : undefined}
-            className={tab}
-          >
-            {l.label}
-          </Link>
-        ))}
-        <button
-          type="button"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className={tab}
-        >
-          더보기
-        </button>
-      </div>
-    </nav>
-  );
+  return <TabBar items={NAV_ITEMS} logoutAction={logout} />;
 }

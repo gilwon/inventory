@@ -1,0 +1,28 @@
+/* Lucian UX/UI Prompt #040 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#040 */
+/* 데스크톱 사이드 레일의 스타일. 요소 CSS는 .u040 범위를 유지한다. */
+.u040{--rw:76px;position:sticky;top:0;display:flex;gap:10px;height:100dvh;max-width:100%;padding:12px 0 12px 12px}
+.u040.is-wide{--rw:200px}
+.u040-rail{position:relative;display:flex;flex-direction:column;flex:none;width:var(--rw);padding:12px 10px;border-radius:24px;background:var(--ux-ink);color:var(--ux-page);overflow:hidden;transition:width .6s var(--ux-spring)}
+.u040-top{display:flex;align-items:center;gap:10px;height:44px;margin-bottom:14px;flex:none}
+.u040-logo{width:36px;height:36px;flex:none;margin-left:10px;border-radius:12px;background:var(--ux-grad)}
+.u040-name{font-size:15.5px;font-weight:780;letter-spacing:-.03em;white-space:nowrap;opacity:0;transition:opacity .25s}
+.u040.is-wide .u040-name{opacity:1;transition:opacity .3s .15s}
+.u040-tog{position:absolute;right:-1px;top:16px;width:30px;height:44px;border:0;padding:0;border-radius:10px 0 0 10px;background:color-mix(in srgb,var(--ux-page) 14%,transparent);color:inherit;display:grid;place-items:center;opacity:0;transition:opacity .2s}
+.u040-rail:hover .u040-tog,.u040-tog:focus-visible,.u040.is-wide .u040-tog{opacity:1}
+@media (hover:none){.u040-tog{opacity:1}}
+.u040-tog:focus-visible{outline:2px solid var(--ux-accent);outline-offset:-2px}
+.u040-tog svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .5s var(--ux-spring)}
+.u040.is-wide .u040-tog svg{transform:rotate(180deg)}
+/* 항목이 많아져도 로그아웃이 밀려나지 않도록 목록만 스크롤한다. 강조 막대가 잘리지 않게 좌우 여백을 안으로 옮겼다. */
+.u040-nav{position:relative;flex:1;min-height:0;margin:0 -10px;padding:0 10px;list-style:none;display:flex;flex-direction:column;gap:4px;overflow-x:hidden;overflow-y:auto}
+.u040-nav>li:not(.u040-hl){flex:none}
+.u040-hl{position:absolute;left:10px;right:10px;top:0;height:48px;border-radius:15px;background:color-mix(in srgb,var(--ux-page) 15%,transparent);transform:translateY(calc(var(--k,0) * 52px));transition:transform .5s var(--ux-spring),opacity .25s;pointer-events:none}
+.u040-hl::before{content:"";position:absolute;left:-10px;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:var(--ux-grad)}
+.u040-it{position:relative;display:flex;align-items:center;gap:14px;width:100%;height:48px;padding:0 0 0 16px;border:0;border-radius:15px;background:none;color:inherit;opacity:.62;text-align:left;text-decoration:none;transition:opacity .25s}
+.u040-it:hover,.u040-it[aria-current="page"]{opacity:1}
+.u040-it:focus-visible{outline:2px solid var(--ux-accent);outline-offset:-2px}
+.u040-it svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.u040-it span{font-size:14.5px;font-weight:650;white-space:nowrap;opacity:0;transform:translateX(-8px);transition:opacity .2s,transform .35s var(--ux-ease)}
+.u040.is-wide .u040-it span{opacity:1;transform:none;transition:opacity .3s var(--ux-ease),transform .5s var(--ux-spring);transition-delay:calc(.12s + var(--i) * 35ms)}
+.u040-foot{flex:none;margin-top:8px;padding-top:8px;border-top:1px solid color-mix(in srgb,var(--ux-page) 14%,transparent)}
+.u040-foot form{margin:0}

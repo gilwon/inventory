@@ -1,0 +1,29 @@
+/* Lucian UX/UI Prompt #041 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#041 */
+/* 모바일 하단 탭 바의 스타일. 요소 CSS는 .u041 범위를 유지한다. */
+.u041{--x:calc(14px + (100% - 28px) / 10);position:fixed;left:8px;right:8px;bottom:8px;z-index:10;width:auto;max-width:100%;height:119px;display:flex;align-items:flex-end;pointer-events:none}
+@media (min-width:768px){.u041{display:none}}
+.u041-bar{position:relative;width:100%;height:84px;border-radius:28px;background:var(--ux-surface);
+  -webkit-mask:radial-gradient(circle 42px at var(--x) -4px,transparent 96%,#000 100%);mask:radial-gradient(circle 42px at var(--x) -4px,transparent 96%,#000 100%);
+  box-shadow:0 0 0 1px var(--ux-line)}
+.u041-shadow{position:absolute;left:0;right:0;bottom:0;height:84px;border-radius:28px;box-shadow:0 24px 40px -24px var(--ux-shadow-strong);pointer-events:none}
+.u041-bub{position:absolute;left:var(--x);top:calc(100% - 84px - 35px);width:62px;height:62px;margin-left:-31px;border-radius:50%;background:var(--ux-grad);box-shadow:0 14px 26px -12px rgba(91,72,255,.7);transition:opacity .25s}
+.u041:not(.has-sel) .u041-bub{opacity:0}
+.u041-tabs{position:absolute;left:0;right:0;bottom:0;height:84px;display:flex;margin:0;padding:0 14px;list-style:none;pointer-events:auto}
+.u041-tabs>li{flex:1;display:flex;min-width:0}
+.u041-tab{position:relative;display:block;flex:1;min-width:44px;height:100%;border:0;padding:0;background:none;color:var(--ux-ink-3);text-decoration:none}
+.u041-tab:hover .u041-ic{color:var(--ux-ink)}
+.u041-tab:focus-visible{outline:2px solid var(--ux-accent);outline-offset:-6px;border-radius:18px}
+.u041-ic{position:absolute;left:50%;top:22px;width:26px;height:26px;margin-left:-13px;transition:transform .55s var(--ux-spring),color .3s}
+.u041-ic svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.u041-lab{position:absolute;left:0;right:0;bottom:12px;font-size:11.5px;font-weight:700;color:var(--ux-ink);text-align:center;white-space:nowrap;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .45s var(--ux-spring)}
+.u041-tab[data-sel] .u041-ic{transform:translateY(-39px);color:var(--ux-accent-ink)}
+.u041-tab[data-sel] .u041-ic svg{stroke-width:2.2}
+.u041-tab[data-sel] .u041-lab{opacity:1;transform:none}
+/* 더보기 패널. 데모에 없던 부분이라 토큰 색만 써서 같은 톤으로 맞췄다. */
+.u041-more{position:absolute;right:6px;bottom:92px;min-width:200px;max-width:100%;margin:0;padding:6px;list-style:none;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 18px 36px -12px var(--ux-shadow-strong);pointer-events:auto}
+.u041-more form{margin:0}
+.u041-mi{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:0 14px;border:0;border-radius:14px;background:none;color:var(--ux-ink);font-size:14.5px;font-weight:650;text-align:left;text-decoration:none}
+.u041-mi:hover{background:var(--ux-surface-2)}
+.u041-mi[aria-current="page"]{background:var(--ux-accent-soft)}
+.u041-mi:focus-visible{outline:2px solid var(--ux-accent);outline-offset:-2px}
+.u041-mi svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
