@@ -13,7 +13,8 @@ Source: spec.md (Status: draft). Status: draft.
 ```
 src/app/(app)/layout.tsx                    모바일 헤더 재구성(햄버거, 큰 제목, 테마 버튼)
 src/components/lucian/hamburger-menu.{tsx,css}   햄버거와 전체 메뉴(이식 또는 토큰으로 제작)
-src/app/(app)/nav.tsx                       메뉴 연결(NAV_ITEMS 재사용, logout)
+src/app/(app)/nav.tsx                       메뉴 연결(NAV_ITEMS 재사용, logout)와 TAB_HREFS(탭 구성)
+src/components/lucian/tab-bar.tsx           탭을 slice가 아니라 지정한 경로 목록으로 고르고 가운데 칸 강조 위치 유지
 src/app/manifest.ts                         웹 앱 매니페스트
 src/app/icon.png, apple-icon.png 또는 public/  아이콘(192, 512, 마스크 가능, 180)
 src/app/layout.tsx                          viewport themeColor(라이트·다크), 애플 웹앱 메타
@@ -31,6 +32,9 @@ P1(헤더·햄버거)과 P2(PWA)는 파일이 겹치지 않아 병렬이다. 겹
 - 헤더는 `md:hidden`. 햄버거(44px), 제목(`text-2xl font-bold`, 필요하면 앱 아이콘 로고와 함께), 테마 토글 순서. 360px에서 `truncate` 없이 한 줄이 되는지 확인한다.
 - 메뉴는 `NAV_ITEMS` 전체와 로그아웃. 포커스 트랩과 Esc, 바깥 누르기, `aria-current`, reduced-motion 처리. 본문 스크롤 잠금은 열려 있는 동안만.
 - 완료 기준. build·tsc·lint·vitest 통과, 360px 가로 넘침 0, 라이트·다크 확인, 하단 탭 바 동작 그대로.
+
+- 하단 탭(R3). `TabBar`가 `items.slice(0, MAX_TABS)`로 앞 4개를 탭으로 쓰는 것을 `tabHrefs` prop(예 `["/", "/items", "/scan", "/move"]`)으로 탭을 고르고 나머지(위치 포함)를 더보기로 보낸다. 활성 칸 계산(`activeIdx`), 방향키, 미끄러지는 강조(`--x`)가 탭 순서를 그대로 따르는지 확인한다. 탭 칸 수와 더보기 칸 위치는 그대로(5칸).
+- 문서 동기화. `ui-lucian/plan.md` U2의 하단 탭 문구를 같은 커밋에서 고친다.
 
 ## P2. PWA (R5~R9)
 - `manifest.ts`, 아이콘 생성(파이썬 PIL 또는 `next/og` ImageResponse 등 사용 가능한 도구로 PNG 생성, 마스크 가능 아이콘은 안전 영역 80%), 루트 `viewport.themeColor`와 애플 메타.
