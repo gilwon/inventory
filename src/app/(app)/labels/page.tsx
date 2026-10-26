@@ -1,4 +1,4 @@
-// QR 라벨 선택·미리보기·인쇄 페이지 (로그인 확인은 (app) 레이아웃이 한다)
+// QR·바코드 라벨 선택·출력 형식·미리보기·인쇄 페이지 (로그인 확인은 (app) 레이아웃이 한다)
 import { Suspense } from "react";
 import { InlineAlert } from "@/components/lucian/inline-alert";
 import { ListSkeleton } from "@/components/lucian/skeleton";

@@ -45,6 +45,29 @@
   word-break: break-all;
 }
 
+/* 바코드 칸은 세로 배치. 위에 바코드, 아래에 이름·코드 */
+.label-cell--barcode {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.5mm;
+}
+.label-cell--barcode .label-qr {
+  width: 55mm;
+  height: 14mm;
+  align-self: center;
+  max-width: 100%;
+}
+.label-cell--barcode .label-name {
+  -webkit-line-clamp: 2;
+}
+.label-cell--barcode .label-text {
+  font-size: 8pt;
+}
+.label-cell--barcode .label-code {
+  margin-top: 0.5mm;
+}
+
 /* 화면에서는 폭에 맞춰 열 수가 바뀐다. */
 .label-sheet {
   display: grid;

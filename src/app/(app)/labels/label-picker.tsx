@@ -1,6 +1,8 @@
 "use client";
 // 라벨로 만들 품목·위치를 검색해 고르고 라벨 격자를 만드는 화면
 import { useState } from "react";
+import { Segmented } from "@/components/lucian/segmented";
+import type { LabelFormat } from "@/lib/label-format";
 import { btnPrimary, btnSecondary, cardCls, errCls, inputCls } from "../items/common";
 import { buildLabels, type Label } from "./actions";
 import { LabelSheet } from "./label-sheet";
@@ -65,6 +67,7 @@ export function LabelPicker({ items, locations }: { items: Entry[]; locations: E
   const [labels, setLabels] = useState<Label[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [format, setFormat] = useState<LabelFormat>("qr");
 
   const term = q.trim().toLowerCase();
   const match = (e: Entry) =>
@@ -83,13 +86,21 @@ export function LabelPicker({ items, locations }: { items: Entry[]; locations: E
     setter(next);
   };
 
+  // 형식이 바뀌면 이전 형식의 미리보기와 오류를 지워 형식이 섞이지 않게 한다.
+  function changeFormat(f: LabelFormat) {
+    if (f === format) return;
+    setFormat(f);
+    setLabels(null);
+    setError(null);
+  }
+
   const count = pickedItems.size + pickedLocs.size;
 
   async function make() {
     setBusy(true);
     setError(null);
     try {
-      const r = await buildLabels([...pickedItems], [...pickedLocs]);
+      const r = await buildLabels([...pickedItems], [...pickedLocs], format);
       if (r.ok) setLabels(r.labels);
       else setError(r.error);
     } catch {
@@ -120,6 +131,18 @@ export function LabelPicker({ items, locations }: { items: Entry[]; locations: E
           onToggle={toggle(pickedItems, setPickedItems)} onAll={toggleAll(pickedItems, setPickedItems)} />
         <Group title="위치" list={shownLocs} picked={pickedLocs}
           onToggle={toggle(pickedLocs, setPickedLocs)} onAll={toggleAll(pickedLocs, setPickedLocs)} />
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-ink">출력 형식</p>
+          <Segmented
+            ariaLabel="출력 형식"
+            options={[
+              { value: "qr", label: "QR" },
+              { value: "barcode", label: "바코드" },
+            ]}
+            value={format}
+            onChange={changeFormat}
+          />
+        </div>
         {error && <p role="alert" className={errCls}>{error}</p>}
         <div className="flex flex-wrap gap-2">
           <button type="button" className={btnPrimary} disabled={busy || count === 0} onClick={make}>
@@ -132,6 +155,11 @@ export function LabelPicker({ items, locations }: { items: Entry[]; locations: E
           )}
         </div>
       </div>
+      {labels && (
+        <p className="label-noprint text-sm text-ink-2">
+          {labels[0]?.format === "barcode" ? "바코드" : "QR"} 라벨 {labels.length}개
+        </p>
+      )}
       {labels && <LabelSheet labels={labels} />}
     </div>
   );
