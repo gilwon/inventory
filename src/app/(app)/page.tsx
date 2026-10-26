@@ -1,4 +1,4 @@
-// 대시보드 화면 (품목 검색, 활성 품목·위치 수, 최근 이력 10건)
+// 대시보드 화면 (품목 검색, 활성 품목·위치 수, 부족 품목, 최근 이력 10건)
 import Link from "next/link";
 import { Suspense } from "react";
 import { EmptyState } from "@/components/lucian/empty-state";
@@ -9,6 +9,7 @@ import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
 import { createClient } from "@/lib/supabase/server";
 import { btnSecondary, cardCls, inputCls, linkCls } from "./items/common";
+import { LowStockCard } from "./low-stock-card";
 
 type Row = {
   id: number;
@@ -78,6 +79,8 @@ async function DashboardData() {
           )}
         </div>
       </section>
+
+      <LowStockCard />
 
       <section aria-labelledby="recent-h" className="space-y-2">
         <div className="flex items-center justify-between gap-3">
