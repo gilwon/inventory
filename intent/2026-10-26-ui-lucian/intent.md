@@ -1,5 +1,5 @@
 # Intent: Lucian UX/UI 적용
-Author: gilwon, 소유자. Status: draft.
+Author: gilwon, 소유자. Status: approved.
 
 ## Problem
 앱의 화면은 Tailwind 기본 회색조(zinc)와 파란 버튼으로 기능만 갖춘 상태다. 시각적 통일감이 없고 내비게이션, 피드백(기록 완료·오류), 빈 화면, 로딩 표시가 밋밋하다.

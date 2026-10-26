@@ -1,5 +1,5 @@
 # Plan: Lucian UX/UI 적용
-Source: spec.md (Status: draft). Status: draft.
+Source: spec.md (Status: approved). Status: approved.
 공통 규약은 ../2026-10-26-inventory/plan.md의 "공통 규약"을 따르되 위 spec Conflicts의 `dark:` 항목은 토큰 색으로 대체한다. Worker는 커밋하지 않는다.
 
 ## 공통 함정

@@ -1,5 +1,5 @@
 # Spec: Lucian UX/UI 적용
-Source: intent.md (Status: draft)
+Source: intent.md (Status: approved)
 
 ## Requirements
 - U1 `--ux-*` 토큰(라이트·다크)을 앱의 전역 테마로 쓴다. Tailwind 테마 색(`surface`, `ink`, `line`, `accent` 등)이 토큰을 가리키고, 화면의 zinc·blue·`dark:` 색 클래스를 이 색으로 바꾼다. 다크는 토큰이 바꾸므로 `dark:` 색 변형을 쓰지 않는다.
