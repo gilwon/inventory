@@ -91,7 +91,8 @@
   word-break:keep-all;overflow-wrap:break-word;
 }
 
-:where(.ux) :is(button,input,textarea,select){font:inherit;color:inherit}
+/* color 는 넣지 않는다. 레이어 밖 규칙이라 text-accent-ink 같은 유틸리티 색을 덮어쓴다. */
+:where(.ux) :is(button,input,textarea,select){font:inherit}
 :where(.ux) button{cursor:pointer}
 .ux :focus-visible{outline:2px solid var(--ux-accent);outline-offset:3px}
 .ux [hidden]{display:none!important}
