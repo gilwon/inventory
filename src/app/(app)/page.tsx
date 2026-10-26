@@ -8,7 +8,7 @@ import { ListSkeleton } from "@/components/lucian/skeleton";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
 import { createClient } from "@/lib/supabase/server";
-import { btnSecondary, cardCls, inputCls, linkCls } from "./items/common";
+import { btnSecondary, cardCls, inputCls } from "./items/common";
 import { LowStockCard } from "./low-stock-card";
 
 type Row = {
@@ -87,7 +87,7 @@ async function DashboardData() {
           <h2 id="recent-h" className="text-lg font-bold">
             최근 이력
           </h2>
-          <Link href="/history" className={`${linkCls} inline-flex min-h-11 items-center`}>
+          <Link href="/history" className={btnSecondary}>
             이력 전체 보기
           </Link>
         </div>
