@@ -1,5 +1,5 @@
 # Spec: 모바일 햄버거 메뉴, 헤더 제목 키우기, PWA 설치
-Source: intent.md (Status: draft)
+Source: intent.md (Status: approved)
 
 ## Requirements
 - R1 md(768px) 미만의 `(app)` 상단 헤더 왼쪽에 햄버거 버튼이 있다. 버튼은 44x44px 이상이고 접근 가능한 이름("메뉴 열기")과 `aria-expanded`, `aria-controls`를 가진다.
