@@ -7,6 +7,7 @@ import { RollingNumber } from "@/components/lucian/rolling-number";
 import { ListSkeleton } from "@/components/lucian/skeleton";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
+import { moveTone } from "@/lib/move-tone";
 import { createClient } from "@/lib/supabase/server";
 import { btnSecondary, cardCls, inputCls } from "./items/common";
 import { LowStockCard } from "./low-stock-card";
@@ -107,7 +108,7 @@ async function DashboardData() {
                 className="grid gap-x-4 gap-y-1 rounded-2xl border border-line bg-surface p-3 text-sm md:grid-cols-[9rem_4rem_1fr_6rem_8rem] md:items-center"
               >
                 <p className="text-ink-2">{formatKst(r.created_at)}</p>
-                <p className="font-semibold">{typeLabel(r)}</p>
+                <p className={`font-semibold ${moveTone(r.type)}`}>{typeLabel(r)}</p>
                 <div className="min-w-0">
                   <p className="break-words font-medium">
                     {r.items ? `${r.items.sku} ${r.items.name}` : "알 수 없는 품목"}
@@ -116,7 +117,7 @@ async function DashboardData() {
                     {paths.get(r.location_id) ?? ""}
                   </p>
                 </div>
-                <p className="font-semibold tabular-nums md:text-right">
+                <p className={`font-semibold tabular-nums md:text-right ${moveTone(r.type)}`}>
                   {r.delta > 0 ? "+" : "-"}
                   {formatQty(Math.abs(r.delta), r.items?.unit)}
                 </p>

@@ -8,6 +8,7 @@ import { isDemo } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
+import { moveTone } from "@/lib/move-tone";
 import { ActiveToggle } from "../active-toggle";
 import { setItemActive } from "../actions";
 import { badgeCls, btnSecondary, cardCls, isUuid, linkCls } from "../common";
@@ -156,11 +157,11 @@ async function ItemDetailContent({
             {(moveRes.data ?? []).map((m) => (
               <li key={m.id} className="space-y-0.5 py-2 text-sm">
                 <div className="flex justify-between gap-3">
-                  <span>
+                  <span className={moveTone(m.type)}>
                     {TYPE_LABEL[m.type] ?? m.type}
                     {m.reverses_id != null && " (정정)"}
                   </span>
-                  <span className="shrink-0 font-medium">
+                  <span className={`shrink-0 font-medium ${moveTone(m.type)}`}>
                     {m.delta > 0 ? "+" : ""}
                     {formatQty(m.delta, item.unit)}
                   </span>

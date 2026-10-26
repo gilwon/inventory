@@ -24,6 +24,8 @@
   --ux-warn:#D6731E;
   /* 라이브러리 기본 #D93A55 는 흰 배경에서 4.48:1 이라 AA 를 맞추려고 어둡게 했다. */
   --ux-danger:#C72D49;
+  /* 입고 표시용 파란색. 흰 배경에서 AA(5.1:1). */
+  --ux-inbound:#2563EB;
   --ux-glass:rgba(255,255,255,.58);
   --ux-glass-line:rgba(255,255,255,.85);
   --ux-shadow:rgba(40,30,80,.14);
@@ -51,6 +53,7 @@
     --ux-mint:#7EE8C0;
     --ux-warn:#FFB26B;
     --ux-danger:#FF7D8C;
+    --ux-inbound:#7DB4FF;
     --ux-glass:rgba(255,255,255,.07);
     --ux-glass-line:rgba(255,255,255,.18);
     --ux-shadow:rgba(0,0,0,.45);
@@ -76,6 +79,7 @@
   --ux-mint:#7EE8C0;
   --ux-warn:#FFB26B;
   --ux-danger:#FF7D8C;
+  --ux-inbound:#7DB4FF;
   --ux-glass:rgba(255,255,255,.07);
   --ux-glass-line:rgba(255,255,255,.18);
   --ux-shadow:rgba(0,0,0,.45);
@@ -134,6 +138,7 @@
   --color-mint: var(--ux-mint);
   --color-warn: var(--ux-warn);
   --color-danger: var(--ux-danger);
+  --color-inbound: var(--ux-inbound);
   --shadow-card: 0 1px 0 var(--ux-line);
   --font-sans: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR",
     "Malgun Gothic", sans-serif;

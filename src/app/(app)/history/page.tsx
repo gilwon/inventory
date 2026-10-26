@@ -7,6 +7,7 @@ import { InlineAlert } from "@/components/lucian/inline-alert";
 import { ListSkeleton } from "@/components/lucian/skeleton";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
+import { moveTone } from "@/lib/move-tone";
 import { createClient } from "@/lib/supabase/server";
 import { ReverseButton } from "./reverse-button";
 
@@ -264,7 +265,7 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
               className="grid gap-x-4 gap-y-1 rounded-2xl border border-line bg-surface p-3 text-sm md:grid-cols-[9rem_5rem_1fr_6rem_auto] md:items-center"
             >
               <p className="text-ink-2">{formatKst(r.created_at)}</p>
-              <p className="font-semibold">{typeLabel(r)}</p>
+              <p className={`font-semibold ${moveTone(r.type)}`}>{typeLabel(r)}</p>
               <div className="min-w-0">
                 <p className="break-words font-medium">
                   {r.items ? `${r.items.sku} ${r.items.name}` : "알 수 없는 품목"}
@@ -281,7 +282,7 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
                   작업자 {r.profiles?.display_name ?? "알 수 없음"}
                 </p>
               </div>
-              <p className="font-semibold tabular-nums md:text-right">
+              <p className={`font-semibold tabular-nums md:text-right ${moveTone(r.type)}`}>
                 {isTransfer ? "" : delta > 0 ? "+" : "-"}
                 {formatQty(Math.abs(delta), r.items?.unit)}
               </p>
