@@ -160,16 +160,19 @@ export type Database = {
       profiles: {
         Row: {
           display_name: string | null
+          email: string | null
           id: string
           role: string
         }
         Insert: {
           display_name?: string | null
+          email?: string | null
           id: string
           role?: string
         }
         Update: {
           display_name?: string | null
+          email?: string | null
           id?: string
           role?: string
         }
@@ -222,6 +225,19 @@ export type Database = {
         Returns: undefined
       }
       import_apply: { Args: { p_payload: Json }; Returns: Json }
+      is_admin: { Args: never; Returns: boolean }
+      low_stock_items: {
+        Args: never
+        Returns: {
+          item_id: string
+          min_qty: number
+          name: string
+          shortage: number
+          sku: string
+          total_qty: number
+          unit: string
+        }[]
+      }
       record_adjust: {
         Args: {
           p_actual_qty: number
@@ -247,6 +263,10 @@ export type Database = {
           p_qty: number
           p_reason?: string
         }
+        Returns: number
+      }
+      record_stocktake: {
+        Args: { p_location_id: string; p_rows: Json }
         Returns: number
       }
       record_transfer: {
@@ -280,6 +300,10 @@ export type Database = {
           total_qty: number
           unit: string
         }[]
+      }
+      set_user_role: {
+        Args: { p_role: string; p_user_id: string }
+        Returns: undefined
       }
       verify_stock_ledger: {
         Args: never

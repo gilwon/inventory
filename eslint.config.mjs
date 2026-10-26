@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Deno 로 실행되는 Edge Function 소스는 Node 린트 대상이 아니다.
+    "supabase/functions/**",
   ]),
 ]);
 
