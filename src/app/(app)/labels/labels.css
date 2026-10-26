@@ -61,7 +61,7 @@
   body:has(.label-sheet) aside,
   body:has(.label-sheet) header,
   body:has(.label-sheet) nav,
-  body:has(.label-sheet) [class^="u04"],
+  body:has(.label-sheet) [class*="u04"],
   .label-noprint {
     display: none !important;
   }

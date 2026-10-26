@@ -2,7 +2,7 @@
 /* 겹쳐 쌓이는 토스트 스타일. 요소 CSS는 .u070 범위를 유지한다.
    데모용 버튼 줄과 빈 안내는 뺐고, 알림 영역은 화면 아래에 고정한다(모바일에서는 하단 탭 바 위).
    작은 글(.u070-tx small)은 입력 내용 확인을 위해 한 줄 말줄임 대신 줄바꿈을 허용했다. */
-.u070{position:fixed;z-index:60;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));width:350px;max-width:calc(100vw - 32px);height:300px;transform:translateX(-50%);pointer-events:none}
+.u070{position:fixed;z-index:60;left:50%;bottom:calc(136px + env(safe-area-inset-bottom));width:350px;max-width:calc(100vw - 32px);height:300px;transform:translateX(-50%);pointer-events:none}
 @media (min-width:768px){.u070{bottom:24px}}
 .u070-zone{position:absolute;left:0;right:0;bottom:0;height:300px;outline:none}
 .u070-t{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;min-height:68px;padding:12px 12px 12px 14px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line),0 16px 30px -18px var(--ux-shadow-strong);transform-origin:50% 100%;transform:translate(var(--dx,0px),var(--y,0px)) scale(var(--s,1));opacity:var(--o,1);transition:transform .5s var(--ux-spring),opacity .35s;touch-action:pan-y;user-select:none;-webkit-user-select:none;pointer-events:auto;animation:u070-in .5s var(--ux-spring) backwards}

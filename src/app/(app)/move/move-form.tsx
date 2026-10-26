@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Segmented } from "@/components/lucian/segmented";
 import { ToastHost, useToast } from "@/components/lucian/toast";
 import { formatQty } from "@/lib/format";
+import { resolveScan } from "../scan/actions";
 import { Scanner } from "../scan/scanner";
 import { btnSecondary } from "../items/common";
 import {
@@ -38,7 +39,8 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
   const [tab, setTab] = useState<Tab>("receive");
   const [item, setItem] = useState<ItemHit | null>(null);
   const [query, setQuery] = useState("");
-  const [scanning, setScanning] = useState(false);
+  // 스캐너를 연 칸. 한 번에 하나만 연다.
+  const [scanFor, setScanFor] = useState<"item" | "loc" | "to-loc" | null>(null);
   const [hits, setHits] = useState<{ q: string; items: ItemHit[] } | null>(null);
   const [locId, setLocId] = useState("");
   const [toLocId, setToLocId] = useState("");
@@ -160,21 +162,53 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
         <label htmlFor={id} className={label}>
           {text}
         </label>
-        <select
-          id={id}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={field}
-        >
-          <option value="">위치 선택</option>
-          {locations.map((l) => (
-            <option key={l.id} value={l.id}>
-              {l.path}
-            </option>
-          ))}
-        </select>
+        <div className="flex gap-2">
+          <select
+            id={id}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className={field}
+          >
+            <option value="">위치 선택</option>
+            {locations.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.path}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => setScanFor((v) => (v === id ? null : (id as "loc" | "to-loc")))}
+            aria-expanded={scanFor === id}
+            aria-label={`${text} 스캔`}
+            className={btnSecondary}
+          >
+            스캔
+          </button>
+        </div>
+        {scanFor === id && (
+          <Scanner onResult={(code) => onScanned(id as "loc" | "to-loc", code)} onClose={() => setScanFor(null)} />
+        )}
       </div>
     );
+  }
+
+  // 읽은 코드를 해석해 해당 칸만 채운다. 해석되지 않으면 칸은 그대로 두고 안내한다.
+  async function onScanned(field: "item" | "loc" | "to-loc", code: string) {
+    setScanFor(null);
+    const r = await resolveScan(code);
+    if (r.kind === "error") return toast.show("err", r.message);
+    if (r.kind === "none") return toast.show("err", "등록되지 않은 코드입니다.");
+    if (field === "item") {
+      if (r.kind !== "item") return toast.show("err", "품목 코드가 아닙니다.");
+      setQuery(code);
+      return;
+    }
+    if (r.kind !== "location") return toast.show("err", "위치 코드가 아닙니다.");
+    if (!locations.some((l) => l.id === r.id))
+      return toast.show("err", "선택할 수 없는 위치입니다.");
+    if (field === "loc") setLocId(r.id);
+    else setToLocId(r.id);
   }
 
   const shown = hits && hits.q === term ? hits.items : null;
@@ -224,22 +258,15 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
             />
             <button
               type="button"
-              onClick={() => setScanning((v) => !v)}
-              aria-expanded={scanning}
+              onClick={() => setScanFor((v) => (v === "item" ? null : "item"))}
+              aria-expanded={scanFor === "item"}
               className={btnSecondary}
             >
               스캔
             </button>
           </div>
-          {scanning && (
-            <Scanner
-              onResult={(code) => {
-                // 읽은 코드로 바로 검색해 품목 목록에서 고르게 한다.
-                setQuery(code);
-                setScanning(false);
-              }}
-              onClose={() => setScanning(false)}
-            />
+          {scanFor === "item" && (
+            <Scanner onResult={(code) => onScanned("item", code)} onClose={() => setScanFor(null)} />
           )}
           <div aria-live="polite">
             {term && shown && shown.length === 0 && (

@@ -99,7 +99,7 @@
 @media (prefers-reduced-motion:reduce){
   .ux,.ux *,.ux *::before,.ux *::after{
     animation-duration:.001ms!important;animation-iteration-count:1!important;
-    transition-duration:.001ms!important;scroll-behavior:auto!important;
+    transition-duration:.001ms!important;transition-delay:0s!important;scroll-behavior:auto!important;
   }
 }
 

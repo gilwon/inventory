@@ -1,6 +1,7 @@
 // 로그인 확인 후 하단 탭/좌측 레일 내비게이션(로그아웃 포함)을 두르는 레이아웃
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav, SideNav } from "./nav";
 
@@ -28,7 +29,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       <main className="min-w-0 flex-1 p-4 pb-32 md:p-6 md:pb-6">
-        <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+        <Suspense fallback={<ListSkeleton />}>
           <AuthGate>{children}</AuthGate>
         </Suspense>
       </main>
