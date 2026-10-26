@@ -34,7 +34,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <aside className="hidden w-56 shrink-0 flex-col justify-between border-r border-zinc-300 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-900 md:flex">
         <div className="space-y-4">
           <p className="px-3 pt-2 text-lg font-bold">재고 관리</p>
-          <SideNav />
+          <Suspense fallback={null}>
+            <SideNav />
+          </Suspense>
         </div>
         <LogoutButton />
       </aside>
@@ -50,7 +52,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </Suspense>
       </main>
 
-      <BottomNav />
+      <Suspense fallback={null}>
+        <BottomNav />
+      </Suspense>
     </div>
   );
 }
