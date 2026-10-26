@@ -1,5 +1,6 @@
 // 엑셀 가져오기·내보내기 화면의 서버 쪽 틀
 import { Suspense } from "react";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { getRole } from "@/lib/auth";
 import { ImportPanel } from "./import-panel";
 
@@ -50,7 +51,7 @@ async function ImportExportContent() {
 // 권한 확인은 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function ImportExportPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+    <Suspense fallback={<ListSkeleton />}>
       <ImportExportContent />
     </Suspense>
   );

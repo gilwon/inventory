@@ -1,6 +1,9 @@
 // 이력 목록 화면 (필터는 URL로 유지, 50건 페이지네이션, 이동 묶음 표시, 정정 버튼)
 import Link from "next/link";
 import { Suspense } from "react";
+import { EmptyState } from "@/components/lucian/empty-state";
+import { InlineAlert } from "@/components/lucian/inline-alert";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
 import { createClient } from "@/lib/supabase/server";
@@ -63,9 +66,7 @@ function typeLabel(r: Row): string {
 
 function ErrorText({ children }: { children: React.ReactNode }) {
   return (
-    <p role="alert" className="text-sm font-medium text-danger">
-      {children}
-    </p>
+    <InlineAlert>{children}</InlineAlert>
   );
 }
 
@@ -244,7 +245,10 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
 
       {errorMessage && <ErrorText>이력을 불러오지 못했습니다. {errorMessage}</ErrorText>}
       {!errorMessage && entries.length === 0 && (
-        <p className="text-sm text-ink-2">조건에 맞는 이력이 없습니다.</p>
+        <EmptyState
+          title="조건에 맞는 이력이 없습니다"
+          description="기간이나 검색 조건을 바꿔 보세요."
+        />
       )}
       {q && itemIds && itemIds.length >= 200 && (
         <p className="text-sm text-ink-2">
@@ -332,7 +336,7 @@ export default function HistoryPage({ searchParams }: { searchParams: SearchPara
   return (
     <div className="mx-auto max-w-5xl space-y-4">
       <h1 className="text-xl font-bold">이력</h1>
-      <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+      <Suspense fallback={<ListSkeleton />}>
         <HistoryContent searchParams={searchParams} />
       </Suspense>
     </div>

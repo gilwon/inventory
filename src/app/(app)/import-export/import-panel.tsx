@@ -2,6 +2,7 @@
 // 파일 선택, 미리보기 표, 가져오기 확정을 맡는 클라이언트 컴포넌트
 
 import { useRef, useState } from "react";
+import { InlineAlert } from "@/components/lucian/inline-alert";
 
 type RowStatus = "new" | "update" | "existing" | "ignored" | "error";
 type Row = {
@@ -148,9 +149,7 @@ export function ImportPanel() {
         {busy === "preview" && <p className="text-sm">미리보기를 만드는 중입니다...</p>}
         {busy === "apply" && <p className="text-sm">가져오는 중입니다...</p>}
         {message && (
-          <p className="rounded-xl border border-danger bg-surface-2 p-3 text-sm text-ink">
-            {message}
-          </p>
+          <InlineAlert role={null}>{message}</InlineAlert>
         )}
         {result && (
           <div className="rounded-xl border border-mint bg-surface-2 p-3 text-sm text-ink">
@@ -173,9 +172,9 @@ export function ImportPanel() {
             , 수량 무시됨 {count("ignored")}, 오류 {count("error")}
           </p>
           {hasError && (
-            <p className="text-sm font-medium text-danger">
+            <InlineAlert>
               오류가 있어 가져올 수 없습니다. 파일을 고쳐 다시 올리세요.
-            </p>
+            </InlineAlert>
           )}
 
           {/* md 미만은 카드 목록, md 이상은 표 */}

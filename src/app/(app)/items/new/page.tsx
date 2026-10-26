@@ -1,6 +1,7 @@
 // 새 품목 등록 화면 (관리자 전용)
 import Link from "next/link";
 import { Suspense } from "react";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { getRole } from "@/lib/auth";
 import { AdminOnlyNotice } from "../../admin-only-notice";
 import { ItemForm } from "../item-form";
@@ -22,7 +23,7 @@ async function NewItemContent() {
 
 export default function NewItemPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+    <Suspense fallback={<ListSkeleton />}>
       <NewItemContent />
     </Suspense>
   );

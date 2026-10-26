@@ -1,10 +1,14 @@
 // 대시보드 화면 (품목 검색, 활성 품목·위치 수, 최근 이력 10건)
 import Link from "next/link";
 import { Suspense } from "react";
+import { EmptyState } from "@/components/lucian/empty-state";
+import { InlineAlert } from "@/components/lucian/inline-alert";
+import { RollingNumber } from "@/components/lucian/rolling-number";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
 import { createClient } from "@/lib/supabase/server";
-import { btnSecondary, cardCls, errCls, inputCls, linkCls } from "./items/common";
+import { btnSecondary, cardCls, inputCls, linkCls } from "./items/common";
 
 type Row = {
   id: number;
@@ -51,23 +55,27 @@ async function DashboardData() {
   return (
     <>
       {failed && (
-        <p role="alert" className={errCls}>
+        <InlineAlert>
           일부 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
-        </p>
+        </InlineAlert>
       )}
 
       <section aria-label="요약" className="grid grid-cols-2 gap-3">
         <div className={cardCls}>
           <p className="text-sm text-ink-2">활성 품목</p>
-          <p className="text-2xl font-bold tabular-nums">
-            {itemCnt.error ? "-" : formatQty(itemCnt.count ?? 0)}
-          </p>
+          {itemCnt.error ? (
+            <p className="text-2xl font-bold tabular-nums">-</p>
+          ) : (
+            <RollingNumber value={formatQty(itemCnt.count ?? 0)} label="활성 품목" />
+          )}
         </div>
         <div className={cardCls}>
           <p className="text-sm text-ink-2">활성 위치</p>
-          <p className="text-2xl font-bold tabular-nums">
-            {locCnt.error ? "-" : formatQty(locCnt.count ?? 0)}
-          </p>
+          {locCnt.error ? (
+            <p className="text-2xl font-bold tabular-nums">-</p>
+          ) : (
+            <RollingNumber value={formatQty(locCnt.count ?? 0)} label="활성 위치" />
+          )}
         </div>
       </section>
 
@@ -82,7 +90,10 @@ async function DashboardData() {
         </div>
 
         {!mvRes.error && rows.length === 0 && (
-          <p className={`${cardCls} text-sm`}>아직 이력이 없습니다.</p>
+          <EmptyState
+            title="아직 이력이 없습니다"
+            description="입출고를 기록하면 여기에 보입니다."
+          />
         )}
 
         {rows.length > 0 && (
@@ -142,7 +153,7 @@ export default function DashboardPage() {
         </div>
       </form>
 
-      <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+      <Suspense fallback={<ListSkeleton />}>
         <DashboardData />
       </Suspense>
     </div>

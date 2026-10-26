@@ -1,0 +1,10 @@
+/* Lucian UX/UI Prompt #079 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#079 */
+/* 스켈레톤 스타일. 요소 CSS는 .u079 범위를 유지한다. 빛 훑기(u079-shine)는 데이터 화면에 모션을 넣지 않는 결정(D2)에 따라 뺐다. */
+.u079{display:flex;flex-direction:column;gap:8px;width:100%;max-width:100%}
+.u079-card{display:flex;align-items:center;gap:10px;padding:16px;border-radius:20px;background:var(--ux-surface);box-shadow:0 0 0 1px var(--ux-line)}
+.u079-s{position:relative;flex:none;border-radius:7px}
+.u079-sk{position:absolute;inset:0;border-radius:inherit;background:var(--ux-surface-2)}
+.u079-av{width:42px;height:42px;border-radius:50%}
+.u079-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:9px}
+.u079-tx .u079-s{height:12px;width:86%;border-radius:6px}
+.u079-tx .u079-s+.u079-s{width:58%;height:11px}

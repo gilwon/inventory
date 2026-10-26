@@ -2,6 +2,8 @@
 // 입고·출고·이동·조정 탭 입력 폼 (품목 검색, 위치 선택, 현재 수량 안내)
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { Segmented } from "@/components/lucian/segmented";
+import { ToastHost, useToast } from "@/components/lucian/toast";
 import { formatQty } from "@/lib/format";
 import {
   getStockAction,
@@ -14,11 +16,12 @@ import {
 type Loc = { id: string; path: string };
 type Tab = MoveInput["type"];
 
-const TABS: { type: Tab; label: string }[] = [
-  { type: "receive", label: "입고" },
-  { type: "issue", label: "출고" },
-  { type: "transfer", label: "이동" },
-  { type: "adjust", label: "조정" },
+// done 은 기록 성공 토스트 제목이다.
+const TABS: { type: Tab; label: string; done: string }[] = [
+  { type: "receive", label: "입고", done: "입고를 기록했습니다" },
+  { type: "issue", label: "출고", done: "출고를 기록했습니다" },
+  { type: "transfer", label: "이동", done: "이동을 기록했습니다" },
+  { type: "adjust", label: "조정", done: "조정을 기록했습니다" },
 ];
 
 const MAX_QTY = 2147483647;
@@ -40,7 +43,7 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
   const [reason, setReason] = useState("");
   const [stock, setStock] = useState<{ key: string; qty: number | null } | null>(null);
   const [refresh, setRefresh] = useState(0);
-  const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
+  const toast = useToast();
   const [pending, startTransition] = useTransition();
   const qtyRef = useRef<HTMLInputElement>(null);
 
@@ -90,30 +93,31 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
     setTab(next);
     setQty("");
     setReason("");
-    setNotice(null);
   }
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!item) return setNotice({ ok: false, text: "품목을 선택해 주세요." });
-    if (!locId) return setNotice({ ok: false, text: "위치를 선택해 주세요." });
+    if (!item) return toast.show("err", "품목을 선택해 주세요.");
+    if (!locId) return toast.show("err", "위치를 선택해 주세요.");
     if (tab === "transfer") {
-      if (!toLocId) return setNotice({ ok: false, text: "도착 위치를 선택해 주세요." });
+      if (!toLocId) return toast.show("err", "도착 위치를 선택해 주세요.");
       if (toLocId === locId) {
-        return setNotice({ ok: false, text: "출발 위치와 도착 위치가 같습니다." });
+        return toast.show("err", "출발 위치와 도착 위치가 같습니다.");
       }
     }
     if (qtyNum === null || (tab !== "adjust" && qtyNum < 1)) {
-      return setNotice({
-        ok: false,
-        text: tab === "adjust" ? "수량은 0 이상의 정수로 입력해 주세요." : "수량은 1 이상의 정수로 입력해 주세요.",
-      });
+      return toast.show(
+        "err",
+        tab === "adjust"
+          ? "수량은 0 이상의 정수로 입력해 주세요."
+          : "수량은 1 이상의 정수로 입력해 주세요.",
+      );
     }
     if (over) {
-      return setNotice({ ok: false, text: "현재 수량보다 많이 입력했습니다." });
+      return toast.show("err", "현재 수량보다 많이 입력했습니다.");
     }
     if (tab === "adjust" && !reason.trim()) {
-      return setNotice({ ok: false, text: "조정 사유를 입력해 주세요." });
+      return toast.show("err", "조정 사유를 입력해 주세요.");
     }
 
     const input: MoveInput = {
@@ -124,20 +128,16 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
       qty,
       reason,
     };
-    const tabLabel = TABS.find((t) => t.type === tab)?.label ?? "";
+    const done = TABS.find((t) => t.type === tab)?.done ?? "";
     const target = `${item.sku} ${item.name}, ${pathOf(locId)}${
       tab === "transfer" ? " > " + pathOf(toLocId) : ""
     }, ${formatQty(qtyNum, unit)}`;
 
     startTransition(async () => {
       const res = await submitMovement(input);
-      if (!res.ok) return setNotice({ ok: false, text: res.error });
-      setNotice({
-        ok: true,
-        text: res.unchanged
-          ? "현재 수량과 같아 기록하지 않았습니다."
-          : `${tabLabel}을 기록했습니다. ${target}`,
-      });
+      if (!res.ok) return toast.show("err", res.error);
+      if (res.unchanged) toast.show("info", "현재 수량과 같아 기록하지 않았습니다.");
+      else toast.show("ok", done, target);
       // 품목·위치는 유지하고 수량·사유만 비운다.
       setQty("");
       setReason("");
@@ -178,19 +178,12 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
 
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
-      <div role="group" aria-label="작업 유형" className="grid grid-cols-4 gap-1 rounded-2xl bg-surface-3 p-1">
-        {TABS.map((t) => (
-          <button
-            key={t.type}
-            type="button"
-            aria-pressed={tab === t.type}
-            onClick={() => changeTab(t.type)}
-            className={`min-h-12 rounded-xl text-base font-medium text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink hover:bg-surface-2 aria-pressed:hover:opacity-90 ${focus}`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+      <Segmented
+        ariaLabel="작업 유형"
+        options={TABS.map((t) => ({ value: t.type, label: t.label }))}
+        value={tab}
+        onChange={changeTab}
+      />
 
       {/* 품목 선택 */}
       {item ? (
@@ -206,7 +199,6 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
             onClick={() => {
               setItem(null);
               setQuery("");
-              setNotice(null);
             }}
             className={`min-h-11 shrink-0 rounded-xl px-3 text-sm font-medium text-accent hover:bg-surface-2 ${focus}`}
           >
@@ -242,7 +234,6 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
                     type="button"
                     onClick={() => {
                       setItem(h);
-                      setNotice(null);
                     }}
                     className={`flex min-h-12 w-full flex-col items-start px-3 py-2 text-left hover:bg-surface-2 ${focus}`}
                   >
@@ -262,7 +253,6 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
 
       {locationSelect("loc", tab === "transfer" ? "출발 위치" : "위치", locId, (v) => {
         setLocId(v);
-        setNotice(null);
       })}
 
       {tab !== "receive" && item && locId && (
@@ -279,7 +269,6 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
       {tab === "transfer" &&
         locationSelect("to-loc", "도착 위치", toLocId, (v) => {
           setToLocId(v);
-          setNotice(null);
         })}
 
       <div className="space-y-1">
@@ -327,19 +316,6 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
         />
       </div>
 
-      {notice && (
-        <p
-          role={notice.ok ? "status" : "alert"}
-          className={`rounded-xl border p-3 text-sm font-medium ${
-            notice.ok
-              ? "border-mint bg-surface-2 text-ink"
-              : "border-danger bg-surface-2 text-ink"
-          }`}
-        >
-          {notice.text}
-        </p>
-      )}
-
       <button
         type="submit"
         disabled={pending || over}
@@ -347,6 +323,8 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
       >
         {pending ? "처리 중..." : `${TABS.find((t) => t.type === tab)?.label} 기록`}
       </button>
+
+      <ToastHost toast={toast} />
     </form>
   );
 }

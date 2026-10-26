@@ -1,0 +1,6 @@
+/* Lucian UX/UI Prompt #098 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#098 */
+/* 자리마다 굴러가는 숫자 스타일. 요소 CSS는 .u098 범위를 유지한다. 한 줄 높이(--rh)와 글자 크기(--rf)를 변수로 열어 두었고 기본값은 라이브러리 값(58px, 50px)이다. 시간과 곡선은 그대로다. */
+.u098-num{display:flex;align-items:flex-start;max-width:100%;height:var(--rh,58px);overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);font-size:var(--rf,50px);font-weight:850;letter-spacing:-.04em;line-height:var(--rh,58px);font-variant-numeric:tabular-nums}
+.u098-col{display:inline-flex;flex-direction:column;transform:translateY(calc(var(--d) * var(--rh,58px) * -1));transition:transform .9s cubic-bezier(.3,1.25,.5,1);transition-delay:calc(var(--i) * 45ms)}
+.u098-col span{height:var(--rh,58px)}
+.u098-sym{display:inline-block}

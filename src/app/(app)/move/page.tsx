@@ -1,5 +1,7 @@
 // 입고·출고·이동·조정을 한 화면에서 처리하는 페이지
 import { Suspense } from "react";
+import { InlineAlert } from "@/components/lucian/inline-alert";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { buildLocationPaths } from "@/lib/location-path";
 import { createClient } from "@/lib/supabase/server";
 import { MoveForm } from "./move-form";
@@ -12,9 +14,9 @@ async function MoveContent() {
     .select("id,parent_id,name,active");
   if (error) {
     return (
-      <p role="alert" className="text-sm font-medium text-danger">
+      <InlineAlert>
         위치 목록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
-      </p>
+      </InlineAlert>
     );
   }
   const all = data ?? [];
@@ -30,7 +32,7 @@ export default function MovePage() {
   return (
     <div className="mx-auto max-w-xl space-y-4">
       <h1 className="text-xl font-bold">입출고</h1>
-      <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+      <Suspense fallback={<ListSkeleton />}>
         <MoveContent />
       </Suspense>
     </div>

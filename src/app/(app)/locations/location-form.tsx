@@ -2,8 +2,9 @@
 // 위치 생성·수정 폼 (상위 위치 선택지는 서버가 후손을 제외해 내려 준다)
 
 import { useActionState } from "react";
+import { InlineAlert } from "@/components/lucian/inline-alert";
 import { saveLocation } from "./actions";
-import { btnPrimary, errCls, inputCls, type FormState } from "../items/common";
+import { btnPrimary, inputCls, type FormState } from "../items/common";
 
 type Props = {
   location?: { id: string; code: string; name: string; parent_id: string | null };
@@ -68,14 +69,10 @@ export function LocationForm({ location, options }: Props) {
       </div>
 
       {state.error && (
-        <p role="alert" className={errCls}>
-          {state.error}
-        </p>
+        <InlineAlert>{state.error}</InlineAlert>
       )}
       {state.ok && (
-        <p role="status" className="text-sm font-medium text-ink">
-          저장했습니다.
-        </p>
+        <InlineAlert kind="success">저장했습니다.</InlineAlert>
       )}
       <button
         type="submit"

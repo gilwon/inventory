@@ -2,11 +2,11 @@
 // 품목 생성·수정 폼 (사진은 검증 후 저장소에 직접 올리고 경로만 서버로 보낸다)
 
 import { useActionState, useState } from "react";
+import { InlineAlert } from "@/components/lucian/inline-alert";
 import { createClient } from "@/lib/supabase/client";
 import { saveItem } from "./actions";
 import {
   btnPrimary,
-  errCls,
   inputCls,
   type FormState,
 } from "./common";
@@ -175,21 +175,15 @@ export function ItemForm({
         />
         {uploading && <p className="text-sm">사진을 올리는 중...</p>}
         {photoError && (
-          <p role="alert" className={errCls}>
-            {photoError}
-          </p>
+          <InlineAlert>{photoError}</InlineAlert>
         )}
       </div>
 
       {state.error && (
-        <p role="alert" className={errCls}>
-          {state.error}
-        </p>
+        <InlineAlert>{state.error}</InlineAlert>
       )}
       {state.ok && (
-        <p role="status" className="text-sm font-medium text-ink">
-          저장했습니다.
-        </p>
+        <InlineAlert kind="success">저장했습니다.</InlineAlert>
       )}
 
       <button

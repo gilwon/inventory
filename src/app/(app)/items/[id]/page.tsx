@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatKst, formatQty } from "@/lib/format";
@@ -179,7 +180,7 @@ async function ItemDetailContent({
 // 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function ItemDetailPage({ params }: { params: Promise<{ id: string }> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+    <Suspense fallback={<ListSkeleton />}>
       <ItemDetailContent params={params} />
     </Suspense>
   );

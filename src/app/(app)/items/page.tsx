@@ -1,11 +1,14 @@
 // 품목 목록 화면 (검색, 보관 포함 필터, 50건 페이지네이션)
 import Link from "next/link";
 import { Suspense } from "react";
+import { EmptyState } from "@/components/lucian/empty-state";
+import { InlineAlert } from "@/components/lucian/inline-alert";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/database.types";
 import { formatQty } from "@/lib/format";
-import { badgeCls, btnPrimary, btnSecondary, cardCls, errCls, focusRing, inputCls } from "./common";
+import { badgeCls, btnPrimary, btnSecondary, cardCls, focusRing, inputCls } from "./common";
 
 const PAGE_SIZE = 50;
 
@@ -90,15 +93,18 @@ async function ItemsContent({
       </form>
 
       {error && (
-        <p role="alert" className={errCls}>
+        <InlineAlert>
           품목을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
-        </p>
+        </InlineAlert>
       )}
 
       {!error && rows.length === 0 && (
-        <p className={`${cardCls} text-sm`}>
-          {q ? "검색 결과가 없습니다." : "등록된 품목이 없습니다."}
-        </p>
+        <EmptyState
+          title={q ? "검색 결과가 없습니다" : "등록된 품목이 없습니다"}
+          description={
+            q ? "검색어를 바꾸거나 보관 포함을 켜 보세요." : "새 품목을 만들면 여기에 보입니다."
+          }
+        />
       )}
 
       {rows.length > 0 && (
@@ -153,7 +159,7 @@ async function ItemsContent({
 // 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function ItemsPage({ searchParams }: { searchParams: Promise<SP> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+    <Suspense fallback={<ListSkeleton />}>
       <ItemsContent searchParams={searchParams} />
     </Suspense>
   );

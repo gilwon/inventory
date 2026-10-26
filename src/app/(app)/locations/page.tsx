@@ -1,6 +1,9 @@
 // 위치 목록 화면 (들여쓰기 트리, 코드 검색, 새 위치 만들기)
 import Link from "next/link";
 import { Suspense } from "react";
+import { EmptyState } from "@/components/lucian/empty-state";
+import { InlineAlert } from "@/components/lucian/inline-alert";
+import { ListSkeleton } from "@/components/lucian/skeleton";
 import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { buildLocationPaths } from "@/lib/location-path";
@@ -8,7 +11,6 @@ import {
   badgeCls,
   btnSecondary,
   cardCls,
-  errCls,
   focusRing,
   inputCls,
 } from "../items/common";
@@ -116,14 +118,17 @@ async function LocationsContent({
       )}
 
       {error && (
-        <p role="alert" className={errCls}>
+        <InlineAlert>
           위치를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
-        </p>
+        </InlineAlert>
       )}
       {!error && rows.length === 0 && (
-        <p className={`${cardCls} text-sm`}>
-          {q ? "검색 결과가 없습니다." : "등록된 위치가 없습니다."}
-        </p>
+        <EmptyState
+          title={q ? "검색 결과가 없습니다" : "등록된 위치가 없습니다"}
+          description={
+            q ? "검색어를 바꿔 보세요." : "새 위치를 만들면 여기에 보입니다."
+          }
+        />
       )}
 
       {rows.length > 0 && (
@@ -153,7 +158,7 @@ async function LocationsContent({
 // 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
 export default function LocationsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   return (
-    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+    <Suspense fallback={<ListSkeleton />}>
       <LocationsContent searchParams={searchParams} />
     </Suspense>
   );
