@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-26T07:42:15.198781+00:00",
+  "title": "Design System: 재고 관리",
+  "extensions": {
+    "colorMeta": {
+      "page": {
+        "role": "neutral",
+        "displayName": "종이 바탕",
+        "canonical": "#F4F2EE",
+        "tonalRamp": [
+          "#2E291E",
+          "#524835",
+          "#75674C",
+          "#998763",
+          "#B0A285",
+          "#C7BDA9",
+          "#DED8CC",
+          "#F5F3F0"
+        ],
+        "darkCanonical": "#07080D"
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "흰 면",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7E7E7E",
+          "#9B9B9B",
+          "#B8B8B8",
+          "#D5D5D5",
+          "#F2F2F2"
+        ],
+        "darkCanonical": "#13141C"
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "연한 면",
+        "canonical": "#F5F3EF",
+        "tonalRamp": [
+          "#2F291D",
+          "#534934",
+          "#77684A",
+          "#9B8761",
+          "#B2A384",
+          "#C8BDA8",
+          "#DFD8CB",
+          "#F5F3EF"
+        ],
+        "darkCanonical": "#1A1B25"
+      },
+      "surface-3": {
+        "role": "neutral",
+        "displayName": "진한 면",
+        "canonical": "#EAE7E1",
+        "tonalRamp": [
+          "#2D2920",
+          "#4F4738",
+          "#726650",
+          "#948568",
+          "#ACA189",
+          "#C4BCAB",
+          "#DCD8CE",
+          "#F4F3F0"
+        ],
+        "darkCanonical": "#252632"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "먹색",
+        "canonical": "#16151B",
+        "tonalRamp": [
+          "#23212B",
+          "#3E3B4C",
+          "#58546D",
+          "#736E8D",
+          "#928EA7",
+          "#B2AFC1",
+          "#D2D0DA",
+          "#F1F1F4"
+        ],
+        "darkCanonical": "#F4F0E8"
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "보조 글자",
+        "canonical": "#57535F",
+        "tonalRamp": [
+          "#252429",
+          "#423F48",
+          "#5E5A67",
+          "#7B7586",
+          "#9994A2",
+          "#B6B3BD",
+          "#D4D2D8",
+          "#F2F1F3"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "약한 글자",
+        "canonical": "#8E8A97",
+        "tonalRamp": [
+          "#252428",
+          "#423F47",
+          "#5E5B66",
+          "#7B7685",
+          "#9995A1",
+          "#B6B4BC",
+          "#D4D3D8",
+          "#F2F2F3"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "계기판 보라",
+        "canonical": "#6A57F2",
+        "tonalRamp": [
+          "#0E0547",
+          "#180A7D",
+          "#220EB3",
+          "#2C12E9",
+          "#5A45F1",
+          "#8A7BF5",
+          "#BAB1F9",
+          "#EAE7FD"
+        ],
+        "darkCanonical": "#B7A4FF"
+      },
+      "accent-2": {
+        "role": "secondary",
+        "displayName": "하늘빛 보조",
+        "canonical": "#2F8FE0",
+        "tonalRamp": [
+          "#0A2943",
+          "#114875",
+          "#1967A8",
+          "#2186DB",
+          "#51A1E5",
+          "#83BCED",
+          "#B6D8F4",
+          "#E9F3FC"
+        ],
+        "darkCanonical": "#7DB4FF"
+      },
+      "accent-ink": {
+        "role": "neutral",
+        "displayName": "강조 위 글자",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7E7E7E",
+          "#9B9B9B",
+          "#B8B8B8",
+          "#D5D5D5",
+          "#F2F2F2"
+        ],
+        "darkCanonical": "#0B0C12"
+      },
+      "mint": {
+        "role": "tertiary",
+        "displayName": "성공 초록",
+        "canonical": "#119C72",
+        "tonalRamp": [
+          "#084532",
+          "#0D7A59",
+          "#13AE7F",
+          "#19E3A6",
+          "#4AEBBB",
+          "#7FF1CF",
+          "#B3F7E2",
+          "#E8FCF6"
+        ],
+        "darkCanonical": "#7EE8C0"
+      },
+      "warn": {
+        "role": "tertiary",
+        "displayName": "경고 주황",
+        "canonical": "#D6731E",
+        "tonalRamp": [
+          "#432409",
+          "#764011",
+          "#A95B18",
+          "#DC761F",
+          "#E6954F",
+          "#EEB482",
+          "#F5D3B6",
+          "#FCF2E9"
+        ],
+        "darkCanonical": "#FFB26B"
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "오류 빨강",
+        "canonical": "#C72D49",
+        "tonalRamp": [
+          "#3E0E17",
+          "#6E1928",
+          "#9D243A",
+          "#CD2E4B",
+          "#DA5C73",
+          "#E58B9B",
+          "#F0BBC4",
+          "#FAEAED"
+        ],
+        "darkCanonical": "#FF7D8C"
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Title",
+        "purpose": "화면 제목."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "본문과 입력 글자(16px 이상)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "라벨, 버튼, 표 머리글."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-line",
+        "value": "0 1px 0 var(--ux-line)",
+        "purpose": "카드의 1px 하단 선."
+      },
+      {
+        "name": "floating",
+        "value": "var(--ux-shadow)",
+        "purpose": "토스트, 하단 탭 바, 달력 팝업처럼 떠 있는 요소."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.2,.8,.2,1)",
+        "purpose": "이식 요소의 기본 곡선(--ux-ease)."
+      },
+      {
+        "name": "spring",
+        "value": "cubic-bezier(.34,1.45,.64,1)",
+        "purpose": "이식 요소의 탄성 곡선(--ux-spring). 데이터 화면에는 쓰지 않는다."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "768px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "한 화면의 주 동작 하나에 쓰는 보라 면 버튼.",
+      "html": "<button class=\"ds-btn-primary\">입고 기록</button>",
+      "css": ".ds-btn-primary{font-family:system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 16px;border:0;border-radius:12px;background:var(--ux-accent,#6A57F2);color:var(--ux-accent-ink,#fff);font-size:14px;font-weight:500;white-space:nowrap;cursor:pointer}.ds-btn-primary:hover{opacity:.9}.ds-btn-primary:focus-visible{outline:2px solid var(--ux-accent,#6A57F2);outline-offset:2px}.ds-btn-primary:disabled{opacity:.6}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "보조 동작용 흰 면 진한 테두리 버튼.",
+      "html": "<button class=\"ds-btn-secondary\">검색</button>",
+      "css": ".ds-btn-secondary{font-family:system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 16px;border:1px solid var(--ux-ink-3,#8E8A97);border-radius:12px;background:var(--ux-surface,#fff);color:var(--ux-ink,#16151B);font-size:14px;font-weight:500;white-space:nowrap;cursor:pointer}.ds-btn-secondary:hover{background:var(--ux-surface-2,#F5F3EF)}.ds-btn-secondary:focus-visible{outline:2px solid var(--ux-accent,#6A57F2);outline-offset:2px}"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "16px 글자, 진한 테두리, 44px 이상 높이의 입력칸.",
+      "html": "<label class=\"ds-field\">수량<input class=\"ds-input\" inputmode=\"numeric\" value=\"3\"></label>",
+      "css": ".ds-field{font-family:system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;display:block;font-size:14px;font-weight:500;color:var(--ux-ink,#16151B)}.ds-input{display:block;width:100%;min-height:44px;margin-top:4px;padding:8px 12px;border:1px solid var(--ux-ink-3,#8E8A97);border-radius:12px;background:var(--ux-surface,#fff);color:var(--ux-ink,#16151B);font:inherit;font-size:16px}.ds-input:focus-visible{outline:2px solid var(--ux-accent,#6A57F2);outline-offset:0}"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "얇은 테두리와 1px 하단 선뿐인 평평한 목록 카드.",
+      "html": "<div class=\"ds-card\"><strong>테스트볼트</strong><span>TEST-001</span><b>5 개</b></div>",
+      "css": ".ds-card{font-family:system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border:1px solid var(--ux-line,rgba(22,21,27,.09));border-radius:16px;background:var(--ux-surface,#fff);box-shadow:0 1px 0 var(--ux-line,rgba(22,21,27,.09));color:var(--ux-ink,#16151B);font-size:16px}.ds-card span{color:var(--ux-ink-2,#57535F);font-size:14px}"
+    },
+    {
+      "name": "Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "상태와 구분을 알리는 작은 배지.",
+      "html": "<span class=\"ds-badge\">보관</span>",
+      "css": ".ds-badge{font-family:system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;display:inline-block;padding:2px 8px;border:1px solid var(--ux-line-2,rgba(22,21,27,.17));border-radius:6px;background:var(--ux-surface-2,#F5F3EF);color:var(--ux-ink,#16151B);font-size:12px;font-weight:500}"
+    }
+  ],
+  "narrative": {
+    "northStar": "현장 계기판",
+    "overview": "창고에서 서서 한 손으로 쓰는 계기판처럼 읽히는 화면이다. 숫자와 상태가 먼저 보이고 장식은 뒤로 물러난다. 한 화면에 강조색은 하나이고, 나머지는 따뜻한 종이색 바탕 위의 중립색으로 둔다.",
+    "keyCharacteristics": [
+      "중립 바탕 위에 보라 강조색 하나",
+      "터치 대상 44px 이상, 둥근 모서리, 진한 입력 테두리",
+      "라이트와 다크는 같은 토큰 이름의 값만 바뀜",
+      "평평한 면, 그림자와 모션은 떠 있거나 상태가 바뀌는 요소에만"
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "한 화면의 채운 강조색 면은 하나다.",
+        "section": "colors"
+      },
+      {
+        "name": "The Color Is Never Alone Rule",
+        "body": "상태는 색만으로 전하지 않는다. 초록과 주황은 글자색으로 쓰지 않는다.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sixteen-Pixel Input Rule",
+        "body": "입력칸 글자는 16px 이상이다.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "면은 가만히 있을 때 평평하다. 그림자와 움직임은 떠 있거나 상태가 바뀔 때만 나타난다.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do 모든 색은 --ux-* 토큰이나 Tailwind 연결 이름으로 쓴다.",
+      "Do 새 화면도 360px에서 가로 스크롤 없이 확인하고 터치 대상은 44px 이상으로 둔다.",
+      "Do 상태를 색과 함께 아이콘이나 글자로 전한다.",
+      "Do 이식한 Lucian 요소의 원본 첫 줄 라이선스 주석을 지킨다.",
+      "Do 모든 모션은 prefers-reduced-motion에서 즉시 끝나게 한다."
+    ],
+    "donts": [
+      "Don't dark: 색 변형이나 zinc-, blue-, red-, green-, amber- 고정 색 클래스를 쓰지 않는다.",
+      "Don't 초록(mint)이나 주황(warn)을 글자색으로 쓰지 않는다.",
+      "Don't 새 시각 체계나 외부 UI 라이브러리를 들이지 않는다.",
+      "Don't 데이터 화면에 장식 모션을 넣지 않는다.",
+      "Don't 입력칸 글자를 16px 아래로 내리지 않는다."
+    ]
+  }
+}
