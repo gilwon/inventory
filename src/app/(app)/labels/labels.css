@@ -1,0 +1,79 @@
+/* 라벨 격자 화면 미리보기와 A4 인쇄 스타일 */
+
+/* 라벨은 종이에 인쇄되므로 다크 모드에서도 항상 흰 바탕·검정 글자(#fff/#000)로 고정한다. */
+.label-cell {
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+  box-sizing: border-box;
+  height: 34mm;
+  padding: 3mm;
+  overflow: hidden;
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  break-inside: avoid;
+}
+.label-qr {
+  flex: none;
+  width: 24mm;
+  height: 24mm;
+  background: #fff;
+}
+.label-qr svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.label-text {
+  min-width: 0;
+  font-size: 9pt;
+  line-height: 1.25;
+}
+.label-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 700;
+  word-break: break-all;
+}
+.label-code {
+  margin-top: 1mm;
+  font-family: ui-monospace, monospace;
+  font-size: 8pt;
+  word-break: break-all;
+}
+
+/* 화면에서는 폭에 맞춰 열 수가 바뀐다. */
+.label-sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(63mm, 1fr));
+  gap: 0;
+}
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+@media print {
+  /* 라벨 화면일 때만 메뉴·선택 UI를 숨긴다. */
+  body:has(.label-sheet) aside,
+  body:has(.label-sheet) header,
+  body:has(.label-sheet) nav,
+  body:has(.label-sheet) [class^="u04"],
+  .label-noprint {
+    display: none !important;
+  }
+  body:has(.label-sheet) main {
+    padding: 0 !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  /* A4 한 장은 3열 × 8행 */
+  .label-sheet {
+    grid-template-columns: repeat(3, 63.33mm);
+    justify-content: start;
+  }
+}

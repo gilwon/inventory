@@ -5,6 +5,8 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Segmented } from "@/components/lucian/segmented";
 import { ToastHost, useToast } from "@/components/lucian/toast";
 import { formatQty } from "@/lib/format";
+import { Scanner } from "../scan/scanner";
+import { btnSecondary } from "../items/common";
 import {
   getStockAction,
   searchItemsAction,
@@ -36,6 +38,7 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
   const [tab, setTab] = useState<Tab>("receive");
   const [item, setItem] = useState<ItemHit | null>(null);
   const [query, setQuery] = useState("");
+  const [scanning, setScanning] = useState(false);
   const [hits, setHits] = useState<{ q: string; items: ItemHit[] } | null>(null);
   const [locId, setLocId] = useState("");
   const [toLocId, setToLocId] = useState("");
@@ -210,14 +213,34 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
           <label htmlFor="item-q" className={label}>
             품목 검색 (SKU, 이름, 바코드)
           </label>
-          <input
-            id="item-q"
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            autoComplete="off"
-            className={field}
-          />
+          <div className="flex gap-2">
+            <input
+              id="item-q"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              autoComplete="off"
+              className={field}
+            />
+            <button
+              type="button"
+              onClick={() => setScanning((v) => !v)}
+              aria-expanded={scanning}
+              className={btnSecondary}
+            >
+              스캔
+            </button>
+          </div>
+          {scanning && (
+            <Scanner
+              onResult={(code) => {
+                // 읽은 코드로 바로 검색해 품목 목록에서 고르게 한다.
+                setQuery(code);
+                setScanning(false);
+              }}
+              onClose={() => setScanning(false)}
+            />
+          )}
           <div aria-live="polite">
             {term && shown && shown.length === 0 && (
               <p className="text-sm text-ink-2">검색 결과가 없습니다.</p>

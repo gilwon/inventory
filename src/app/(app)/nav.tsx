@@ -55,6 +55,53 @@ export const NAV_ITEMS: NavItem[] = [
     label: "가져오기/내보내기",
     icon: <path d="M12 4v11M12 15l-4-4M12 15l4-4M5 19.5h14" />,
   },
+  {
+    href: "/stocktake",
+    label: "실사",
+    icon: (
+      <>
+        <rect x="5" y="4" width="14" height="17" rx="2" />
+        <path d="M9 4.5h6M9 12l2 2 4-4" />
+      </>
+    ),
+  },
+  {
+    href: "/scan",
+    label: "스캔",
+    icon: <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16" />,
+  },
+  {
+    href: "/labels",
+    label: "라벨",
+    icon: (
+      <>
+        <rect x="4" y="4" width="6" height="6" rx="1" />
+        <rect x="14" y="4" width="6" height="6" rx="1" />
+        <rect x="4" y="14" width="6" height="6" rx="1" />
+        <path d="M14 14h2v2h-2zM18 18h2v2h-2z" />
+      </>
+    ),
+  },
+  {
+    href: "/settings/users",
+    label: "사용자 관리",
+    icon: (
+      <>
+        <circle cx="9" cy="8.5" r="3.2" />
+        <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5M16.5 11.5a2.8 2.8 0 1 0 0-5.6M18.5 14.8c1.6.6 2.7 2.2 2.7 4.2" />
+      </>
+    ),
+  },
+  {
+    href: "/settings/password",
+    label: "비밀번호 변경",
+    icon: (
+      <>
+        <rect x="5" y="10.5" width="14" height="9.5" rx="2" />
+        <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
+      </>
+    ),
+  },
 ];
 
 // PC 화면(md 이상) 좌측 사이드 레일
