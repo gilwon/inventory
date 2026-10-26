@@ -3,6 +3,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, koError, type FormState } from "./common";
 
@@ -27,6 +28,8 @@ export async function saveItem(
   fd: FormData,
 ): Promise<FormState> {
   const supabase = await requireUser();
+  const guard = await requireAdmin();
+  if (!guard.ok) return { error: guard.error };
   const mode = text(fd, "mode");
   const sku = text(fd, "sku");
   const name = text(fd, "name");
@@ -104,6 +107,8 @@ export async function setItemActive(
   fd: FormData,
 ): Promise<FormState> {
   const supabase = await requireUser();
+  const guard = await requireAdmin();
+  if (!guard.ok) return { error: guard.error };
   const id = text(fd, "id");
   if (!isUuid(id)) return { error: "잘못된 요청입니다." };
   const active = text(fd, "active") === "1";

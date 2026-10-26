@@ -1,4 +1,5 @@
 // 업로드한 엑셀을 읽어 행별 검증 결과를 돌려주는 미리보기 API
+import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { UploadError, loadSnapshot, readUpload } from "@/lib/excel/parse";
 import { validateWorkbook } from "@/lib/excel/validate";
@@ -9,6 +10,8 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "로그인이 필요합니다" }, { status: 401 });
+  if ((await getRole()) !== "admin")
+    return Response.json({ error: "관리자만 사용할 수 있습니다" }, { status: 403 });
 
   try {
     const parsed = await readUpload(request);

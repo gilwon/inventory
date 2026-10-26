@@ -1,4 +1,5 @@
 // 같은 파일을 다시 읽고 검증한 뒤 import_apply 로 가져오기를 확정하는 API
+import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { UploadError, loadSnapshot, readUpload } from "@/lib/excel/parse";
 import { validateWorkbook } from "@/lib/excel/validate";
@@ -9,6 +10,8 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "로그인이 필요합니다" }, { status: 401 });
+  if ((await getRole()) !== "admin")
+    return Response.json({ error: "관리자만 사용할 수 있습니다" }, { status: 403 });
 
   try {
     // 클라이언트의 검증 결과는 받지 않고 서버에서 다시 검증한다.

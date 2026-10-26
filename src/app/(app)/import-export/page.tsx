@@ -1,10 +1,13 @@
 // 엑셀 가져오기·내보내기 화면의 서버 쪽 틀
+import { Suspense } from "react";
+import { getRole } from "@/lib/auth";
 import { ImportPanel } from "./import-panel";
 
 const btn =
   "inline-flex min-h-11 items-center justify-center rounded-xl border border-ink-3 bg-surface px-4 py-2 text-sm font-medium text-ink hover:bg-surface-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
 
-export default function ImportExportPage() {
+async function ImportExportContent() {
+  const isAdmin = (await getRole()) === "admin";
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8">
       <h1 className="text-xl font-bold">가져오기 / 내보내기</h1>
@@ -21,6 +24,7 @@ export default function ImportExportPage() {
         </a>
       </section>
 
+      {isAdmin ? (
       <section aria-labelledby="import-title" className="space-y-3">
         <h2 id="import-title" className="text-lg font-semibold">
           가져오기
@@ -36,6 +40,18 @@ export default function ImportExportPage() {
         </a>
         <ImportPanel />
       </section>
+      ) : (
+        <p className="text-sm text-ink-2">가져오기는 관리자만 사용할 수 있습니다.</p>
+      )}
     </div>
+  );
+}
+
+// 권한 확인은 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
+export default function ImportExportPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-ink-2">불러오는 중...</p>}>
+      <ImportExportContent />
+    </Suspense>
   );
 }

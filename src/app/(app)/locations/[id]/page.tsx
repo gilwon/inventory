@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
@@ -18,6 +19,7 @@ async function LocationDetailContent({
   const { id } = await params;
   if (!isUuid(id)) notFound();
 
+  const isAdmin = (await getRole()) === "admin";
   const supabase = await createClient();
   const [locRes, stockRes] = await Promise.all([
     supabase.from("locations").select("id, parent_id, code, name, active"),
@@ -111,6 +113,8 @@ async function LocationDetailContent({
         )}
       </section>
 
+      {isAdmin && (
+      <>
       <section aria-labelledby="edit-h" className="space-y-3">
         <h2 id="edit-h" className="font-bold">
           위치 정보 수정
@@ -129,6 +133,8 @@ async function LocationDetailContent({
         </p>
         <ActiveToggle action={setLocationActive} id={loc.id} active={loc.active} />
       </section>
+      </>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 // 위치 목록 화면 (들여쓰기 트리, 코드 검색, 새 위치 만들기)
 import Link from "next/link";
 import { Suspense } from "react";
+import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { buildLocationPaths } from "@/lib/location-path";
 import {
@@ -57,6 +58,7 @@ async function LocationsContent({
   const sp = await searchParams;
   const q = first(sp.q).trim().slice(0, 50);
 
+  const isAdmin = (await getRole()) === "admin";
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("locations")
@@ -102,14 +104,16 @@ async function LocationsContent({
         </div>
       </form>
 
-      <details className={cardCls}>
-        <summary className={`min-h-11 cursor-pointer py-2 font-medium ${focusRing}`}>
-          새 위치 만들기
-        </summary>
-        <div className="pt-3">
-          <LocationForm options={parentOptions} />
-        </div>
-      </details>
+      {isAdmin && (
+        <details className={cardCls}>
+          <summary className={`min-h-11 cursor-pointer py-2 font-medium ${focusRing}`}>
+            새 위치 만들기
+          </summary>
+          <div className="pt-3">
+            <LocationForm options={parentOptions} />
+          </div>
+        </details>
+      )}
 
       {error && (
         <p role="alert" className={errCls}>

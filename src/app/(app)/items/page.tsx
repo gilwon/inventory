@@ -1,6 +1,7 @@
 // 품목 목록 화면 (검색, 보관 포함 필터, 50건 페이지네이션)
 import Link from "next/link";
 import { Suspense } from "react";
+import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/database.types";
 import { formatQty } from "@/lib/format";
@@ -25,6 +26,7 @@ async function ItemsContent({
   const archived = first(sp.archived) === "1";
   const pageNum = Math.min(Math.max(parseInt(first(sp.page), 10) || 1, 1), 10000);
 
+  const isAdmin = (await getRole()) === "admin";
   const supabase = await createClient();
   // 검색어는 RPC 파라미터로만 넘긴다. 다음 페이지 유무는 1건 더 요청해 판단한다.
   const { data, error } = await supabase.rpc("search_items", {
@@ -50,9 +52,11 @@ async function ItemsContent({
     <div className="mx-auto max-w-3xl space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-xl font-bold">품목</h1>
-        <Link href="/items/new" className={btnPrimary}>
-          새 품목
-        </Link>
+        {isAdmin && (
+          <Link href="/items/new" className={btnPrimary}>
+            새 품목
+          </Link>
+        )}
       </div>
 
       <form action="/items" method="get" role="search" className="space-y-2">

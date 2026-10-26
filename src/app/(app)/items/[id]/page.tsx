@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { getRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
@@ -27,6 +28,7 @@ async function ItemDetailContent({
   const { id } = await params;
   if (!isUuid(id)) notFound();
 
+  const isAdmin = (await getRole()) === "admin";
   const supabase = await createClient();
   const [itemRes, stockRes, locRes, moveRes] = await Promise.all([
     supabase.from("items").select("*").eq("id", id).maybeSingle(),
@@ -97,13 +99,37 @@ async function ItemDetailContent({
         </p>
       </section>
 
-      <section aria-labelledby="edit-h" className="space-y-3">
-        <h2 id="edit-h" className="font-bold">
-          품목 정보 수정
-        </h2>
-        <ItemForm item={item} photoUrl={photoUrl} />
-      </section>
+      {isAdmin ? (
+        <section aria-labelledby="edit-h" className="space-y-3">
+          <h2 id="edit-h" className="font-bold">
+            품목 정보 수정
+          </h2>
+          <ItemForm item={item} photoUrl={photoUrl} />
+        </section>
+      ) : (
+        <section aria-labelledby="info-h" className={`${cardCls} space-y-2`}>
+          <h2 id="info-h" className="font-bold">
+            품목 정보
+          </h2>
+          {photoUrl && (
+            // 서명 URL 이라 next/image 최적화 대상이 아니다.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={photoUrl}
+              alt="품목 사진"
+              className="h-40 w-40 max-w-full rounded-xl border border-line object-cover"
+            />
+          )}
+          <dl className="space-y-1 text-sm">
+            <div className="flex gap-2"><dt className="shrink-0 text-ink-2">바코드</dt><dd className="min-w-0 break-all">{item.barcode || "-"}</dd></div>
+            <div className="flex gap-2"><dt className="shrink-0 text-ink-2">단위</dt><dd>{item.unit}</dd></div>
+            <div className="flex gap-2"><dt className="shrink-0 text-ink-2">최소 수량</dt><dd>{formatQty(item.min_qty, item.unit)}</dd></div>
+            <div className="flex gap-2"><dt className="shrink-0 text-ink-2">메모</dt><dd className="min-w-0 whitespace-pre-wrap break-words">{item.memo || "-"}</dd></div>
+          </dl>
+        </section>
+      )}
 
+      {isAdmin && (
       <section aria-labelledby="archive-h" className={`${cardCls} space-y-2`}>
         <h2 id="archive-h" className="font-bold">
           {item.active ? "보관" : "복원"}
@@ -115,6 +141,7 @@ async function ItemDetailContent({
         </p>
         <ActiveToggle action={setItemActive} id={item.id} active={item.active} />
       </section>
+      )}
 
       <section aria-labelledby="hist-h" className={`${cardCls} space-y-3`}>
         <h2 id="hist-h" className="font-bold">
