@@ -107,9 +107,47 @@ export async function parseWorkbook(buffer: ArrayBuffer): Promise<ParsedWorkbook
   return { locations, items };
 }
 
+// 압축 해제 후 총 크기 상한. zip 폭탄을 exceljs 로 읽기 전에 막는다.
+const MAX_UNZIPPED_BYTES = 50 * 1024 * 1024;
+
+// zip 중앙 디렉터리의 비압축 크기 합을 검사한다. 읽을 수 없거나 zip64 이면 거절한다.
+// shortcut: 헤더 값만 믿는다(헤더 위조 시 실제 크기와 다를 수 있음), 스트리밍 해제 한도가 필요하면 그때 교체.
+export function assertZipSize(buf: ArrayBuffer, max = MAX_UNZIPPED_BYTES): void {
+  const bad = () => new UploadError("엑셀(.xlsx) 파일을 읽을 수 없습니다");
+  if (buf.byteLength < 22) throw bad();
+  const v = new DataView(buf);
+  // EOCD 는 끝에서 22바이트 + 주석(최대 65535) 범위에 있다.
+  let eocd = -1;
+  for (let i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 22 - 0xffff); i--) {
+    if (v.getUint32(i, true) === 0x06054b50) {
+      eocd = i;
+      break;
+    }
+  }
+  if (eocd < 0) throw bad();
+  const count = v.getUint16(eocd + 10, true);
+  const size = v.getUint32(eocd + 12, true);
+  let off = v.getUint32(eocd + 16, true);
+  if (count === 0xffff || size === 0xffffffff || off === 0xffffffff) throw bad();
+  if (off + size > eocd) throw bad();
+  let total = 0;
+  for (let n = 0; n < count; n++) {
+    if (off + 46 > buf.byteLength || v.getUint32(off, true) !== 0x02014b50) throw bad();
+    const uncompressed = v.getUint32(off + 24, true);
+    if (uncompressed === 0xffffffff || v.getUint32(off + 20, true) === 0xffffffff) throw bad();
+    total += uncompressed;
+    if (total > max) throw new UploadError("파일 내용이 너무 큽니다", 413);
+    off += 46 + v.getUint16(off + 28, true) + v.getUint16(off + 30, true) + v.getUint16(off + 32, true);
+  }
+}
+
 // 요청의 multipart 에서 "file" 을 꺼내 검사하고 파싱한다.
 export async function readUpload(request: Request): Promise<ParsedWorkbook> {
-  const length = Number(request.headers.get("content-length") ?? 0);
+  const header = request.headers.get("content-length");
+  const length = header === null || header.trim() === "" ? NaN : Number(header);
+  if (!Number.isFinite(length) || length < 0) {
+    throw new UploadError("요청 크기를 확인할 수 없습니다", 411);
+  }
   // multipart 오버헤드를 감안해 여유를 둔다.
   if (length > MAX_FILE_BYTES + 64 * 1024) {
     throw new UploadError("파일이 너무 큽니다. 5MB 이하만 올릴 수 있습니다", 413);
@@ -130,7 +168,9 @@ export async function readUpload(request: Request): Promise<ParsedWorkbook> {
   if (!file.name.toLowerCase().endsWith(".xlsx")) {
     throw new UploadError("엑셀(.xlsx) 파일만 올릴 수 있습니다");
   }
-  return parseWorkbook(await file.arrayBuffer());
+  const buf = await file.arrayBuffer();
+  assertZipSize(buf);
+  return parseWorkbook(buf);
 }
 
 // 타입 없는 클라이언트는 조인 결과를 배열로 추론하므로 data 는 unknown 으로 받고 호출부 타입을 믿는다.

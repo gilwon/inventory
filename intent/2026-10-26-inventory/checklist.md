@@ -11,8 +11,8 @@
 - [x] git init, 문서 3종 첫 커밋
 - [x] Supabase 새 프로젝트 비용 확인과 사용자 승인 (Free 플랜, 서울)
 - [x] Supabase 프로젝트 생성 (inventory, ref ikbzdqkjdvaatqmrmqzz)
-- [ ] 사용자 수동 작업 안내 (가입 차단, 첫 계정 생성)
-- [ ] .env.local 값 확보
+- [x] 사용자 수동 작업 (가입 차단 disable_signup=true 확인, 첫 계정 생성)
+- [x] .env.local 값 확보
 
 ## W1 scaffold·인증·내비
 - [x] 구현
@@ -57,7 +57,9 @@
 
 ## 마무리
 - [x] Acceptance 브라우저 확인 (미로그인 이동, 입고·출고·이동·정정·조정, 초과 출고 거절, 품목·위치 보관 거절, 중복 SKU·바코드 거절, 엑셀 가져오기(오류 거절·수량 무시)·내보내기, 360px 8개 화면 가로 넘침 없음). 다크 모드는 미확인
-- [ ] /code-review
-- [ ] /security-review
-- [ ] sdlc review (의도 대조)
-- [ ] 계획 이탈 반영 확인 (plan.md)
+- [x] /code-review (W1~W5 두 차례)
+- [x] /security-review (푸시 전 에이전트 검토, Critical·High 없음, Medium 2건 처리)
+- [x] sdlc review (의도 대조, 경미한 수정 필요 판정 후 반영)
+- [x] 계획 이탈 반영 확인 (plan.md)
+- [ ] 후속(2차 전) 보안 Low: items·locations 길이 CHECK, move·history Server Action의 getUser 일관성
+- [ ] 후속 UI: 낮은 터치 대상, 가져오기 미리보기 갱신 건수, Date.now 경고, 다크 모드·사진 업로드 확인

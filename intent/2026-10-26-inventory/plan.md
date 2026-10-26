@@ -22,14 +22,18 @@ Next.js(App Router, TypeScript, Tailwind), `@supabase/ssr`, `@supabase/supabase-
 supabase/migrations/0001_schema.sql      테이블, 인덱스, 제약, 트리거
 supabase/migrations/0002_rls_storage.sql RLS 정책, 권한 회수, 사진 버킷
 supabase/migrations/0003_rpc.sql         record_*, reverse_movement, import_apply, search_items
+supabase/migrations/0004_profile_display_name.sql  새 사용자 표시 이름 기본값
+supabase/migrations/0005_drop_photo_update_policy.sql  사진 덮어쓰기 정책 제거
 src/proxy.ts (또는 middleware.ts)         세션 갱신, 미로그인 시 /login 이동
 src/lib/supabase/{server,client}.ts      Supabase 클라이언트 생성
 src/lib/database.types.ts                Advisor가 생성
 src/lib/format.ts                        KST 표시, 수량 표시
-src/lib/excel/{schema,parse,validate,build}.ts, validate.test.ts
+src/lib/location-path.ts                 위치 경로 문자열(Advisor 작성)
+src/lib/excel/{schema,parse,validate,build}.ts, validate.test.ts, zip-size.test.ts
 src/app/layout.tsx, globals.css
 src/app/login/{page.tsx,actions.ts}
 src/app/(app)/layout.tsx                 로그인 확인, 하단/상단 내비게이션
+src/app/(app)/nav.tsx                    SideNav, BottomNav
 src/app/(app)/page.tsx                   대시보드
 src/app/(app)/items/{page.tsx,new/page.tsx,[id]/page.tsx,item-form.tsx,actions.ts}
 src/app/(app)/locations/{page.tsx,[id]/page.tsx,location-form.tsx,actions.ts}
@@ -180,7 +184,10 @@ W1과 W2는 파일이 겹치지 않으므로 동시에 띄운다. W3·W4·W5는 
 - W4 history 필터 유형에 "정정"(adjust + reverses_id)과 "가져오기"를 추가했다.
 - W5 검증 규칙을 spec R30에 더했다. 위치코드가 있는데 수량이 비면 오류, 수량만 있고 위치코드가 없으면 오류, 보관된 품목·위치는 오류, 같은 SKU의 바코드가 행마다 다르면 오류. 수량 0 행은 "수량 무시됨"으로 보인다(사유 문구가 다름). 위치와 품목 행 합계 5,000행 제한. 양식에 "안내" 시트를 더했다.
 - W5 `parse.ts`에 DB 읽기 보조(`loadSnapshot`, `fetchAll`, `readUpload`)가 함께 있다.
-- 알려진 한계로 Supabase 클라이언트에 `Database` 제네릭이 없어 W3·W4에 `any` 캐스트가 있다. 후속으로 제네릭을 붙이고 캐스트를 지운다.
+- 알려진 한계로 Supabase 클라이언트에 `Database` 제네릭이 없어 W3·W4·W6(`(app)/page.tsx`)와 `locations/[id]/page.tsx`에 `any`·타입 캐스트가 있다. 후속으로 제네릭을 붙이고 캐스트를 지운다.
+- 정정(`reverse_movement`)은 보관된 품목·위치에는 거절한다(spec R18에 없는 추가 규칙). 보관된 대상에 수량이 되살아나는 것을 막으려는 의도이며, 복원 후 정정하면 된다.
+- 보안 검토 후속으로 `items/common.ts`에 `koRpcError`를 더해 RPC 오류는 한글 문구만 화면에 보인다(move, history). 가져오기 미리보기는 md 미만에서 표 대신 카드로 보인다.
+- 보안 검토 후속으로 xlsx 업로드는 content-length가 없으면 411로 거절하고, zip 중앙 디렉터리의 비압축 크기 합이 50MB를 넘으면 413으로 거절한다(`assertZipSize`, 헤더를 믿는 방식). 사진 저장소의 update 정책은 0005에서 제거했다(앱은 새 경로에 `upsert:false`로만 올린다).
 
 ## 위험
 - 사용자 수동 단계(가입 차단, 첫 계정)가 빠지면 외부인이 가입할 수 있다. 앱 배포 전 반드시 확인한다.

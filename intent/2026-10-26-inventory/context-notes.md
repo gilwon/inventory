@@ -51,6 +51,13 @@
 - 후속 Medium. xlsx 압축 폭탄(`parse.ts`, 본문 바이트를 직접 세고 압축 해제 크기 상한 필요). 스토리지 update 정책에 경로 제한 없음(`0002_rls_storage.sql`, update 정책 제거 또는 경로 조건 추가).
 - 후속 Low. RPC 오류 원문 전달(`move/actions.ts`, `history/actions.ts`, 한글 메시지만 통과). `items`·`locations` 직접 쓰기에 길이 CHECK 없음. move/history Server Action이 `getUser()`를 직접 부르지 않음(RLS가 막아 우회 없음).
 - 계정 사이 권한 차이가 없는 1차에서는 영향이 작고, 2차 팀 확장 전에 처리한다.
+- 처리 결과. Medium 2건과 Low의 RPC 오류 원문 노출을 같은 날 고쳤다(0005, `assertZipSize`, `koRpcError`). 남은 Low는 길이 CHECK와 Server Action `getUser` 일관성.
+- 기각한 안은 xlsx를 스트리밍으로 해제하며 크기를 세는 방식. 이유는 5MB 제한과 내부 사용자 규모 대비 과함. 헤더를 믿는 검사의 한계는 코드 주석(`shortcut:`)에 남김.
+
+## 2026-10-26 sdlc review 결과
+- 판정은 경미한 수정 필요. 1차 요구사항 누락 없음, Constraints 위반 없음.
+- 반영한 것. 보관 대상 정정 거절을 plan.md 이탈 절에 추가(되돌리지 않기로 함, 복원 후 정정하면 됨), plan.md 파일 맵과 `any` 위치 정정, 미리보기 표를 360px에서 카드로, RPC 오류 한글 필터.
+- 남긴 것. 검색 결과에 위치별 수량이 없고 합계만 있음(spec R10·R11 설계대로, intent와의 차이). 0004 적용 전에 만든 프로필은 이름이 비어 있을 수 있음(현재 계정은 정상).
 
 ## 사용자 확인이 필요한 남은 것
 - Supabase 새 프로젝트 생성 비용과 리전.
