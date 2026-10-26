@@ -14,10 +14,10 @@ export async function POST(request: Request) {
     // 클라이언트의 검증 결과는 받지 않고 서버에서 다시 검증한다.
     const parsed = await readUpload(request);
     const snapshot = await loadSnapshot(supabase);
-    const { rows, hasError, payload } = validateWorkbook(parsed, snapshot);
+    const { rows, hasError, itemsUpdated, payload } = validateWorkbook(parsed, snapshot);
     if (hasError || !payload) {
       return Response.json(
-        { error: "오류가 있어 가져올 수 없습니다. 파일을 고쳐 다시 올리세요", rows },
+        { error: "오류가 있어 가져올 수 없습니다. 파일을 고쳐 다시 올리세요", rows, itemsUpdated },
         { status: 422 },
       );
     }

@@ -59,6 +59,8 @@ export function ImportPanel() {
   const [file, setFile] = useState<File | null>(null);
   const [rows, setRows] = useState<Row[] | null>(null);
   const [hasError, setHasError] = useState(false);
+  // 서버가 센 갱신 품목 수 (확정 후 결과의 "품목 N건 갱신"과 같은 기준)
+  const [itemsUpdated, setItemsUpdated] = useState(0);
   const [busy, setBusy] = useState<"preview" | "apply" | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [result, setResult] = useState<ApplyResult | null>(null);
@@ -83,6 +85,7 @@ export function ImportPanel() {
       else {
         setRows(data.rows);
         setHasError(data.hasError);
+        setItemsUpdated(data.itemsUpdated);
       }
     } catch {
       setMessage("서버에 연결하지 못했습니다");
@@ -102,6 +105,7 @@ export function ImportPanel() {
         if (data.rows) {
           setRows(data.rows);
           setHasError(true);
+          setItemsUpdated(data.itemsUpdated);
         }
       } else {
         setResult(data.result);
@@ -165,7 +169,7 @@ export function ImportPanel() {
       {rows && (
         <div className="space-y-3">
           <p className="text-sm">
-            총 {rows.length}행. 신규 {count("new")}, 갱신 {count("update")}, 기존 {count("existing")}
+            총 {rows.length}행. 신규 {count("new")}, 갱신 {itemsUpdated}, 기존 {count("existing")}
             , 수량 무시됨 {count("ignored")}, 오류 {count("error")}
           </p>
           {hasError && (

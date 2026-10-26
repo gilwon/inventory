@@ -13,8 +13,8 @@ export async function POST(request: Request) {
   try {
     const parsed = await readUpload(request);
     const snapshot = await loadSnapshot(supabase);
-    const { rows, hasError } = validateWorkbook(parsed, snapshot);
-    return Response.json({ rows, hasError });
+    const { rows, hasError, itemsUpdated } = validateWorkbook(parsed, snapshot);
+    return Response.json({ rows, hasError, itemsUpdated });
   } catch (e) {
     if (e instanceof UploadError) {
       return Response.json({ error: e.message }, { status: e.status });

@@ -1,6 +1,7 @@
 // 업로드된 xlsx 를 행 배열로 읽고, 검증에 쓸 기존 상태 스냅샷을 DB 에서 읽는 모듈
 import ExcelJS from "exceljs";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/database.types";
 import {
   ITEM_COLUMNS,
   LOCATION_COLUMNS,
@@ -173,34 +174,33 @@ export async function readUpload(request: Request): Promise<ParsedWorkbook> {
   return parseWorkbook(buf);
 }
 
-// 타입 없는 클라이언트는 조인 결과를 배열로 추론하므로 data 는 unknown 으로 받고 호출부 타입을 믿는다.
-type PageResult = PromiseLike<{ data: unknown; error: { message: string } | null }>;
+type PageResult<T> = PromiseLike<{ data: T[] | null; error: { message: string } | null }>;
 
 // Supabase 는 한 번에 1,000행까지만 돌려주므로 range 로 나눠 끝까지 읽는다.
 export async function fetchAll<T>(
-  page: (from: number, to: number) => PageResult,
+  page: (from: number, to: number) => PageResult<T>,
   size = 1000,
 ): Promise<T[]> {
   const all: T[] = [];
   for (let from = 0; ; from += size) {
     const { data: raw, error } = await page(from, from + size - 1);
     if (error) throw new Error(error.message);
-    const data = (raw ?? []) as T[];
+    const data = raw ?? [];
     all.push(...data);
     if (data.length < size) return all;
   }
 }
 
 // 검증용 기존 상태를 읽는다. 키는 모두 trim 후 소문자이다.
-export async function loadSnapshot(supabase: SupabaseClient): Promise<Snapshot> {
+export async function loadSnapshot(supabase: SupabaseClient<Database>): Promise<Snapshot> {
   const [locs, items, stocks] = await Promise.all([
-    fetchAll<{ code: string; active: boolean }>((f, t) =>
+    fetchAll((f, t) =>
       supabase.from("locations").select("code, active").order("id").range(f, t),
     ),
-    fetchAll<{ sku: string; barcode: string | null; active: boolean }>((f, t) =>
+    fetchAll((f, t) =>
       supabase.from("items").select("sku, barcode, active").order("id").range(f, t),
     ),
-    fetchAll<{ items: { sku: string } | null; locations: { code: string } | null }>((f, t) =>
+    fetchAll((f, t) =>
       supabase
         .from("stock")
         .select("items(sku), locations(code)")

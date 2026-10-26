@@ -30,6 +30,8 @@ function parseNonNegInt(raw: string): { value: number | null; error?: string } {
 export type ValidationOutput = {
   rows: RowResult[];
   hasError: boolean;
+  // 기존 품목을 갱신하는 SKU 수. 수량 무시됨 행도 포함하고 같은 SKU는 한 번만 센다 (import_apply 의 items_updated 기준).
+  itemsUpdated: number;
   // 오류가 없을 때만 채워진다.
   payload: ImportPayload | null;
 };
@@ -48,9 +50,13 @@ export function validateWorkbook(
 
   const rows = [...locResults, ...itemResults];
   const hasError = rows.some((r) => r.status === "error");
+  const itemsUpdated = new Set(
+    parsed.items.filter((it) => snap.items.has(key(it.sku))).map((it) => key(it.sku)),
+  ).size;
   return {
     rows,
     hasError,
+    itemsUpdated,
     payload: hasError ? null : buildPayload(parsed, locResults),
   };
 }

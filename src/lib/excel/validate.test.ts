@@ -48,6 +48,26 @@ describe("validateWorkbook", () => {
     );
     expect(r.rows.map((x) => x.status)).toEqual(["existing", "update"]);
     expect(r.payload?.locations).toEqual([]);
+    expect(r.itemsUpdated).toBe(1);
+  });
+
+  it("수량 무시됨 행도 기존 품목이면 갱신에 세고 같은 SKU는 한 번만 센다", () => {
+    const r = run(
+      {
+        items: [
+          item(2, { sku: "S1", locationCode: "A", qty: "3" }),
+          item(3, { sku: "s1", locationCode: "B", qty: "4" }),
+          item(4, { sku: "S2" }),
+        ],
+      },
+      snap({
+        locations: new Map([["a", true], ["b", true]]),
+        items: new Map([["s1", true]]),
+        stocks: new Set(["s1|a", "s1|b"]),
+      }),
+    );
+    expect(r.rows.map((x) => x.status)).toEqual(["ignored", "ignored", "new"]);
+    expect(r.itemsUpdated).toBe(1);
   });
 
   it("이미 수량이 있는 조합은 ignored", () => {

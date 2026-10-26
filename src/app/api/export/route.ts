@@ -43,17 +43,13 @@ export async function GET() {
 
   try {
     const [locations, profiles, stockRaw, count] = await Promise.all([
-      fetchAll<{ id: string; parent_id: string | null; name: string; code: string }>((f, t) =>
+      fetchAll((f, t) =>
         supabase.from("locations").select("id, parent_id, name, code").order("id").range(f, t),
       ),
-      fetchAll<{ id: string; display_name: string | null }>((f, t) =>
+      fetchAll((f, t) =>
         supabase.from("profiles").select("id, display_name").order("id").range(f, t),
       ),
-      fetchAll<{
-        qty: number;
-        location_id: string;
-        items: { sku: string; name: string; unit: string } | null;
-      }>((f, t) =>
+      fetchAll((f, t) =>
         supabase
           .from("stock")
           .select("qty, location_id, items(sku, name, unit)")
@@ -98,7 +94,7 @@ export async function GET() {
             .order("id", { ascending: false })
             .range(o, Math.min(o + PAGE, limit) - 1);
           if (error) throw new Error(error.message);
-          return (data ?? []) as unknown as MovementRow[];
+          return data ?? [];
         }),
       );
       chunk.forEach((rows) => movements.push(...rows));
