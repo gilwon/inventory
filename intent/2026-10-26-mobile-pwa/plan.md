@@ -16,7 +16,7 @@ src/components/lucian/hamburger-menu.{tsx,css}   햄버거와 전체 메뉴(이�
 src/app/(app)/nav.tsx                       메뉴 연결(NAV_ITEMS 재사용, logout)와 TAB_HREFS(탭 구성)
 src/components/lucian/tab-bar.tsx           탭을 slice가 아니라 지정한 경로 목록으로 고르고 가운데 칸 강조 위치 유지
 src/app/manifest.ts                         웹 앱 매니페스트
-src/app/icon.png, apple-icon.png 또는 public/  아이콘(192, 512, 마스크 가능, 180)
+public/icons/{icon-192,icon-512,icon-maskable-512,apple-touch-icon}.png  아이콘(정적 파일, 맥의 PIL로 생성)
 src/app/layout.tsx                          viewport themeColor(라이트·다크), 애플 웹앱 메타
 public/sw.js                                오프라인 안내용 서비스 워커
 src/components/sw-register.tsx              서비스 워커 등록(클라이언트)
@@ -48,6 +48,12 @@ P1(헤더·햄버거)과 P2(PWA)는 파일이 겹치지 않아 병렬이다. 겹
 
 ## 커밋 단위
 1. 문서와 PRODUCT.md 문구 2. 햄버거와 제목(P1) 3. PWA(P2).
+
+## 구현 중 계획 이탈
+- 아이콘은 `src/app/icon.png` 규약이 아니라 `public/icons/` 정적 파일이고, 매처는 `icons/` 접두 경로 전체를 제외한다(폴더에는 PNG만 둔다).
+- `/offline`은 `empty-state`(선반 그림)가 안내와 맞지 않아 쓰지 않고 토큰 클래스로 만들었다. 서비스 워커는 캐시에 `/offline`이 없으면 `Response.error()`를 돌려준다.
+- 햄버거 메뉴는 Lucian #045가 고정 크기 데모이고 하드코딩 색이 있어 이식하지 않고 `--ux-*` 토큰으로 직접 만들었다(파일 첫 줄 라이선스 주석 없음, 둘째 줄에 직접 제작 표시). 헤더에 앱 로고는 넣지 않았다.
+- 서비스 워커 등록은 production 또는 `localhost`일 때만이다(`127.0.0.1` 제외).
 
 ## 위험
 - 서비스 워커 캐시 범위가 넓어지면 낡은 재고가 보인다. `/offline`과 그 자산만 캐시한다.
