@@ -38,6 +38,7 @@ export async function startDemo() {
   (await cookies()).set(DEMO_COOKIE, "1", {
     httpOnly: true,
     sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     path: "/",
   });
   redirect("/");
