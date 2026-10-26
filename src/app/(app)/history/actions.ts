@@ -12,6 +12,11 @@ export async function reverseMovement(movementId: number): Promise<ReverseResult
     return { ok: false, error: "잘못된 이력입니다." };
   }
   const supabase = await createClient();
+  // 비로그인 요청은 RPC 호출 전에 거절한다.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "로그인이 필요합니다." };
   const { error } = await supabase.rpc("reverse_movement", {
     p_movement_id: movementId,
   });

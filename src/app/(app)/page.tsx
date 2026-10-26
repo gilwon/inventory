@@ -46,8 +46,7 @@ async function DashboardData() {
   // DB 오류 문구는 화면에 노출하지 않는다.
   const failed = Boolean(itemCnt.error || locCnt.error || locRes.error || mvRes.error);
   const paths = buildLocationPaths(locRes.data ?? []);
-  // Database 제네릭이 없어 조인 결과가 배열로 추론되므로 직접 타입을 지정한다.
-  const rows = (mvRes.data ?? []) as unknown as Row[];
+  const rows: Row[] = mvRes.data ?? [];
 
   return (
     <>

@@ -1,5 +1,6 @@
 // 품목 목록 화면 (검색, 보관 포함 필터, 50건 페이지네이션)
 import Link from "next/link";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/database.types";
 import { formatQty } from "@/lib/format";
@@ -14,7 +15,7 @@ type ItemRow = Pick<Tables<"items">, "id" | "sku" | "name" | "unit" | "active"> 
 type SP = Record<string, string | string[] | undefined>;
 const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? "";
 
-export default async function ItemsPage({
+async function ItemsContent({
   searchParams,
 }: {
   searchParams: Promise<SP>;
@@ -32,8 +33,7 @@ export default async function ItemsPage({
     off: (pageNum - 1) * PAGE_SIZE,
     include_archived: archived,
   });
-  // 클라이언트에 DB 제네릭이 없어 RPC 반환이 any 이므로 사용하는 열만 타입을 지정한다.
-  const all = (data ?? []) as ItemRow[];
+  const all: ItemRow[] = data ?? [];
   const rows = all.slice(0, PAGE_SIZE);
   const hasNext = all.length > PAGE_SIZE;
 
@@ -143,5 +143,14 @@ export default async function ItemsPage({
         </nav>
       )}
     </div>
+  );
+}
+
+// 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
+export default function ItemsPage({ searchParams }: { searchParams: Promise<SP> }) {
+  return (
+    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+      <ItemsContent searchParams={searchParams} />
+    </Suspense>
   );
 }

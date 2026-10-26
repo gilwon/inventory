@@ -1,5 +1,6 @@
 // 위치 목록 화면 (들여쓰기 트리, 코드 검색, 새 위치 만들기)
 import Link from "next/link";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { buildLocationPaths } from "@/lib/location-path";
 import {
@@ -48,7 +49,7 @@ function flatten(locs: Loc[]): { loc: Loc; depth: number }[] {
   return out;
 }
 
-export default async function LocationsPage({
+async function LocationsContent({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -142,5 +143,14 @@ export default async function LocationsPage({
         </ul>
       )}
     </div>
+  );
+}
+
+// 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
+export default function LocationsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  return (
+    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+      <LocationsContent searchParams={searchParams} />
+    </Suspense>
   );
 }

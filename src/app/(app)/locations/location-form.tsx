@@ -56,7 +56,7 @@ export function LocationForm({ location, options }: Props) {
           id={`${p}-parent`}
           name="parent_id"
           defaultValue={location?.parent_id ?? ""}
-          className={inputCls}
+          className={`${inputCls} min-h-11`}
         >
           <option value="">없음 (최상위)</option>
           {options.map((o) => (

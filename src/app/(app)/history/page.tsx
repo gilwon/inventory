@@ -97,7 +97,7 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
       off: 0,
       include_archived: true,
     });
-    itemIds = ((data ?? []) as { id: string }[]).map((r) => r.id);
+    itemIds = (data ?? []).map((r) => r.id);
   }
 
   let rows: Row[] = [];
@@ -126,8 +126,7 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
     const { data, error } = await query;
     // DB 오류 문구는 화면에 노출하지 않는다.
     if (error) errorMessage = "잠시 후 다시 시도해 주세요.";
-    // Database 제네릭이 없어 조인 결과가 배열로 추론되므로 직접 타입을 지정한다.
-    const got = (data ?? []) as unknown as Row[];
+    const got: Row[] = data ?? [];
     hasNext = got.length > PAGE_SIZE;
     rows = got.slice(0, PAGE_SIZE);
   }
@@ -137,7 +136,7 @@ async function HistoryContent({ searchParams }: { searchParams: SearchParams }) 
   const byId = new Map(rows.map((r) => [r.id, r]));
   if (groupIds.length > 0) {
     const { data } = await supabase.from("movements").select(SELECT).in("group_id", groupIds);
-    for (const r of (data ?? []) as unknown as Row[]) byId.set(r.id, r);
+    for (const r of data ?? []) byId.set(r.id, r);
   }
   const groupRows = [...byId.values()].filter(
     (r) => r.group_id && groupIds.includes(r.group_id) && r.type.startsWith("transfer_"),

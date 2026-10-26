@@ -1,6 +1,7 @@
 // 품목 상세 화면 (수정 폼, 위치별 수량, 최근 이력 20건, 보관/복원)
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
@@ -18,7 +19,7 @@ const TYPE_LABEL: Record<string, string> = {
   import: "가져오기",
 };
 
-export default async function ItemDetailPage({
+async function ItemDetailContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -60,7 +61,7 @@ export default async function ItemDetailPage({
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="space-y-2">
-        <Link href="/items" className={linkCls}>
+        <Link href="/items" className={`${linkCls} inline-flex min-h-11 items-center`}>
           품목 목록
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -81,8 +82,8 @@ export default async function ItemDetailPage({
         ) : (
           <ul className="divide-y divide-zinc-200 dark:divide-zinc-700">
             {stock.map((s) => (
-              <li key={s.location_id} className="flex justify-between gap-3 py-2">
-                <Link href={`/locations/${s.location_id}`} className={`${linkCls} min-w-0 break-words`}>
+              <li key={s.location_id} className="flex items-center justify-between gap-3">
+                <Link href={`/locations/${s.location_id}`} className={`${linkCls} inline-flex min-h-11 items-center min-w-0 break-words`}>
                   {s.path}
                 </Link>
                 <span className="shrink-0">{formatQty(s.qty, item.unit)}</span>
@@ -145,5 +146,14 @@ export default async function ItemDetailPage({
         )}
       </section>
     </div>
+  );
+}
+
+// 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
+export default function ItemDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+      <ItemDetailContent params={params} />
+    </Suspense>
   );
 }

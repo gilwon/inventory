@@ -1,6 +1,7 @@
 // 위치 상세 화면 (품목별 수량, 하위 위치 링크, 수정, 보관/복원)
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
@@ -9,7 +10,7 @@ import { badgeCls, cardCls, isUuid, linkCls } from "../../items/common";
 import { setLocationActive } from "../actions";
 import { LocationForm } from "../location-form";
 
-export default async function LocationDetailPage({
+async function LocationDetailContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -51,19 +52,14 @@ export default async function LocationDetailPage({
     .map((l) => ({ id: l.id, label: paths.get(l.id) ?? l.name }))
     .sort((a, b) => a.label.localeCompare(b.label, "ko"));
 
-  // 클라이언트에 DB 제네릭이 없어 조인 결과 타입이 어긋나므로 형태를 직접 지정한다.
-  const stockRows = (stockRes.data ?? []) as unknown as {
-    qty: number;
-    items: { id: string; sku: string; name: string; unit: string } | null;
-  }[];
-  const stock = stockRows
+  const stock = (stockRes.data ?? [])
     .flatMap((s) => (s.items ? [{ qty: s.qty, item: s.items }] : []))
     .sort((a, b) => a.item.name.localeCompare(b.item.name, "ko"));
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="space-y-2">
-        <Link href="/locations" className={linkCls}>
+        <Link href="/locations" className={`${linkCls} inline-flex min-h-11 items-center`}>
           위치 목록
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -84,8 +80,8 @@ export default async function LocationDetailPage({
         ) : (
           <ul className="divide-y divide-zinc-200 dark:divide-zinc-700">
             {stock.map(({ qty, item }) => (
-              <li key={item.id} className="flex justify-between gap-3 py-2">
-                <Link href={`/items/${item.id}`} className={`${linkCls} min-w-0 break-words`}>
+              <li key={item.id} className="flex items-center justify-between gap-3">
+                <Link href={`/items/${item.id}`} className={`${linkCls} inline-flex min-h-11 items-center min-w-0 break-words`}>
                   {item.name} ({item.sku})
                 </Link>
                 <span className="shrink-0">{formatQty(qty, item.unit)}</span>
@@ -105,7 +101,7 @@ export default async function LocationDetailPage({
           <ul className="space-y-1">
             {children.map((c) => (
               <li key={c.id} className="flex items-center gap-2">
-                <Link href={`/locations/${c.id}`} className={`${linkCls} min-w-0 break-words`}>
+                <Link href={`/locations/${c.id}`} className={`${linkCls} inline-flex min-h-11 items-center min-w-0 break-words`}>
                   {c.name} ({c.code})
                 </Link>
                 {!c.active && <span className={badgeCls}>보관</span>}
@@ -134,5 +130,14 @@ export default async function LocationDetailPage({
         <ActiveToggle action={setLocationActive} id={loc.id} active={loc.active} />
       </section>
     </div>
+  );
+}
+
+// 데이터 조회는 Suspense 안에서 해서 화면 이동이 막히지 않게 한다.
+export default function LocationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense fallback={<p className="text-sm text-zinc-600 dark:text-zinc-400">불러오는 중...</p>}>
+      <LocationDetailContent params={params} />
+    </Suspense>
   );
 }

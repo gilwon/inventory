@@ -34,14 +34,17 @@ export async function searchItemsAction(q: string): Promise<ItemHit[]> {
   const term = String(q ?? "").trim().slice(0, 100);
   if (!term) return [];
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
   const { data } = await supabase.rpc("search_items", {
     q: term,
     lim: 8,
     off: 0,
     include_archived: false,
   });
-  // server.ts 클라이언트에 Database 제네릭이 없어 반환 타입이 any 이므로 직접 지정한다.
-  return ((data ?? []) as ItemHit[]).map((r) => ({
+  return (data ?? []).map((r) => ({
     id: r.id,
     sku: r.sku,
     name: r.name,
@@ -57,6 +60,10 @@ export async function getStockAction(
 ): Promise<number | null> {
   if (!UUID.test(String(itemId)) || !UUID.test(String(locationId))) return null;
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
   const { data, error } = await supabase
     .from("stock")
     .select("qty")
@@ -85,6 +92,11 @@ export async function submitMovement(input: MoveInput): Promise<MoveResult> {
   }
 
   const supabase = await createClient();
+  // 비로그인 요청은 RPC 호출 전에 거절한다.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "로그인이 필요합니다." };
   const reasonArg = reason || undefined;
 
   if (type === "receive" || type === "issue") {
