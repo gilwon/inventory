@@ -8,9 +8,9 @@
 - [x] plan.md 사용자 승인
 
 ## S0 Advisor 선행
-- [ ] git init, 문서 3종 첫 커밋
-- [ ] Supabase 새 프로젝트 비용 확인과 사용자 승인
-- [ ] Supabase 프로젝트 생성
+- [x] git init, 문서 3종 첫 커밋
+- [x] Supabase 새 프로젝트 비용 확인과 사용자 승인 (Free 플랜, 서울)
+- [x] Supabase 프로젝트 생성 (inventory, ref ikbzdqkjdvaatqmrmqzz)
 - [ ] 사용자 수동 작업 안내 (가입 차단, 첫 계정 생성)
 - [ ] .env.local 값 확보
 

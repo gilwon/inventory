@@ -94,7 +94,7 @@ W1과 W2는 파일이 겹치지 않으므로 동시에 띄운다. W3·W4·W5는 
 - `record_adjust(item, location, actual_qty, reason)`: 사유 필수, 차이가 0이면 아무것도 기록하지 않고 0을 반환.
 - `reverse_movement(movement_id)`: 이미 정정된 행, 정정 행 자체는 거절. 이동 행은 같은 `group_id`의 두 행을 함께 정정. 한 행이라도 음수가 되면 전체 롤백.
 - `import_apply(payload jsonb)`: `{locations:[{code,name,parent_code}], items:[{sku,name,barcode,unit,min_qty,memo}], stocks:[{sku,location_code,qty}]}`. 위치(없는 코드만 생성, 상위 먼저), 품목(신규 insert, 기존 SKU는 정보 갱신), 수량(`stock` 행이 없거나 qty 0인 조합만 `import` 유형 입고, 이미 있으면 건너뜀)을 한 트랜잭션으로. 결과로 생성·갱신·무시 건수를 반환.
-- `search_items(q text, lim int, off int)`: SKU·바코드 정확 일치 우선, 그다음 SKU·이름·바코드 부분 일치(`ilike`, 입력의 `%`·`_`는 이스케이프). 반환 열은 품목 열 + `total_qty`. `q`가 비면 전체를 이름순.
+- `search_items(q text, lim int, off int, include_archived boolean default false)`: 보관 품목은 기본 숨김(W3 목록의 "보관 포함" 필터만 true). 다음 페이지 유무는 `lim+1`건을 요청해 판단한다. SKU·바코드 정확 일치 우선, 그다음 SKU·이름·바코드 부분 일치(`ilike`, 입력의 `%`·`_`는 이스케이프). 반환 열은 품목 열 + `total_qty`. `q`가 비면 전체를 이름순.
 - `verify_stock_ledger()`: 이력 합과 `stock`이 다른 (item, location)을 반환(R20 검증용, 읽기 전용).
 **완료 기준** 파일이 문법 오류 없이 작성됨. 실제 검증은 S1에서 Advisor가 한다.
 **함정**
@@ -118,7 +118,7 @@ W1과 W2는 파일이 겹치지 않으므로 동시에 띄운다. W3·W4·W5는 
 **완료 기준** 빌드·린트·타입 통과. 수동 확인은 Advisor가 브라우저로 한다(Acceptance 5, 6).
 **함정**
 - 검색어를 쿼리 문자열에 직접 붙이지 않는다(RPC 파라미터로만).
-- 위치 트리 경로("창고 > 선반 > 칸") 문자열 생성 함수는 `lib/`에 하나만 만들어 W4·W5도 쓰게 한다. 단 W4·W5는 W3와 병렬이므로 `lib/location-path.ts`는 W1이 아니라 W3가 만들고, W4·W5는 각자 필요하면 SQL 쪽 재귀 쿼리나 로컬 헬퍼로 처리한다. 공유가 필요해지면 Advisor가 통합한다.
+- 위치 경로("창고 > 선반 > 칸") 문자열은 Advisor가 만든 `src/lib/location-path.ts`의 `buildLocationPaths(locations)`를 W3·W4·W5 모두 그대로 쓴다. 수정하지 않는다.
 
 ## W4. 입출고·이동·조정·이력 (R14~R21, R35)
 **파일** `move/*`, `history/*`.
