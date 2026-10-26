@@ -46,6 +46,12 @@
 - 360px에서 높이 40px 미만 터치 대상이 있다. 품목 목록의 "보관 포함" 체크박스, 상세의 "품목 목록" 링크와 위치 링크, 위치 화면의 상위 위치 select. 후속.
 - 개발 서버에서 `Date.now()` prerender 경고가 모든 화면에 난다(`(app)/layout.tsx` AuthGate). 빌드는 통과하고 화면은 정상. 후속으로 원인 확인.
 
+## 2026-10-26 푸시 전 보안 검토 결과
+- Critical·High 없음. 비밀 값 하드코딩 없음, RPC와 RLS 구성 정상.
+- 후속 Medium. xlsx 압축 폭탄(`parse.ts`, 본문 바이트를 직접 세고 압축 해제 크기 상한 필요). 스토리지 update 정책에 경로 제한 없음(`0002_rls_storage.sql`, update 정책 제거 또는 경로 조건 추가).
+- 후속 Low. RPC 오류 원문 전달(`move/actions.ts`, `history/actions.ts`, 한글 메시지만 통과). `items`·`locations` 직접 쓰기에 길이 CHECK 없음. move/history Server Action이 `getUser()`를 직접 부르지 않음(RLS가 막아 우회 없음).
+- 계정 사이 권한 차이가 없는 1차에서는 영향이 작고, 2차 팀 확장 전에 처리한다.
+
 ## 사용자 확인이 필요한 남은 것
 - Supabase 새 프로젝트 생성 비용과 리전.
 - 가입 차단과 첫 계정 생성(수동).
