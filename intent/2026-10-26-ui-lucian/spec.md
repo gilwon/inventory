@@ -21,7 +21,7 @@ Source: intent.md (Status: approved)
 - D1 라이브러리의 보라 강조색(#6A57F2, 다크 #B7A4FF)을 그대로 쓴다. 기각한 안은 재고 앱용 별도 색. 이유는 요청이 라이브러리 적용이다.
 - D2 라이브러리 요소 중 데이터 화면(표, 이력 목록, 폼 입력)에는 모션 요소를 넣지 않고 토큰 스타일만 적용한다. 이유는 intent의 데이터 우선 제약이다.
 - D3 Tailwind로 요소 CSS를 다시 쓰지 않는다. 이유는 라이브러리 이식 규칙(모션 값 보존).
-- D4 `dark:` 변형 제거로 다크 모드 판정은 토큰(`prefers-color-scheme`과 `data-theme`)이 맡는다. 현재 앱은 시스템 설정만 따르며 수동 전환 버튼은 만들지 않는다.
+- D4 `dark:` 변형 제거로 다크 모드 판정은 토큰(`prefers-color-scheme`과 `data-theme`)이 맡는다. 사용자 요청(2026-10-26)으로 시스템·라이트·다크 전환 버튼을 둔다. 기본은 시스템이고 선택은 브라우저(localStorage `theme`)에 저장하며 `<html data-theme>`로 적용한다. 시스템을 고르면 속성을 지워 `prefers-color-scheme`이 정한다.
 
 ## Conflicts
 - 전역 규약(`design-quality-check`)의 480/1024/1440 확인과 1차 R34의 360px가 모두 대상이다. 둘 다 확인한다.

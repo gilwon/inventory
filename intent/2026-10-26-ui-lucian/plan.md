@@ -62,6 +62,7 @@ U1(직렬) → U2와 U3 병렬(파일 겹치지 않음) → Advisor 통합 검�
 - U3. 롤링 숫자(#098)는 직전 값을 sessionStorage에 두고 같은 값이면 움직이지 않는다.
 - U3. 입출고 문구 "입고을"을 "입고를"로 고쳤다.
 - 토스트 모바일 위치는 탭 바 위로 136px로 올렸고, reduced-motion에서 `transition-delay`도 0으로 한다. `(app)/layout.tsx` fallback은 ListSkeleton이다.
+- 테마 전환. `src/components/theme-toggle.tsx`(시스템·라이트·다크 버튼 묶음)를 추가했다. 모바일은 헤더 오른쪽, 데스크톱은 본문 위 오른쪽, 로그인은 오른쪽 위에 둔다. 루트 레이아웃 `<head>`의 초기화 스크립트가 첫 페인트 전에 저장값을 적용하고 `<html>`에 `suppressHydrationWarning`을 둔다. 설정은 기기별 브라우저 저장이라 계정에 따라가지 않는다.
 
 ## 위험
 - 이식 요소의 모션이 느린 휴대폰에서 거슬릴 수 있다. 데이터 화면에는 모션을 넣지 않는다.

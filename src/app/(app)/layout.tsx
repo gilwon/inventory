@@ -2,6 +2,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { ListSkeleton } from "@/components/lucian/skeleton";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav, SideNav } from "./nav";
 
@@ -24,11 +25,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </Suspense>
       </aside>
 
-      <header className="flex items-center border-b border-line bg-surface px-4 py-3 md:hidden">
+      <header className="flex items-center justify-between border-b border-line bg-surface px-4 py-2 md:hidden">
         <p className="font-bold">재고 관리</p>
+        <ThemeToggle />
       </header>
 
       <main className="min-w-0 flex-1 p-4 pb-32 md:p-6 md:pb-6">
+        <div className="mb-2 hidden justify-end md:flex">
+          <ThemeToggle />
+        </div>
         <Suspense fallback={<ListSkeleton />}>
           <AuthGate>{children}</AuthGate>
         </Suspense>
