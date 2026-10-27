@@ -18,6 +18,13 @@ export function parseMonth(s: string): { year: number; month: number } | null {
   return month >= 1 && month <= 12 ? { year, month } : null;
 }
 
+// "YYYY-MM-DD" 가 실제 날짜이고 해당 월 안이면 그 문자열, 아니면 null.
+export function parseDay(s: string, year: number, month: number): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
+  const t = new Date(`${s}T00:00:00Z`).getTime();
+  return !Number.isNaN(t) && ymd(t) === s && s.startsWith(`${monthKey(year, month)}-`) ? s : null;
+}
+
 export function monthKey(year: number, month: number): string {
   return `${String(year).padStart(4, "0")}-${pad(month)}`;
 }

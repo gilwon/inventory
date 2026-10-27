@@ -35,3 +35,5 @@ src/app/(app)/nav.tsx               "이력" 다음에 "달력" 항목 추가(�
 - 입출고 내역 패널을 추가했다(spec 추가 사양). 파일 맵에 `src/app/(app)/calendar/kinds.ts`(칩 종류·색 매핑 공유)와 `recent-panel.tsx`(서버 컴포넌트)가 늘었고, `calendar.ts`에 `kstLabel`이 늘었다.
 - 월 계산을 `CalendarLayout`으로 옮겨 달력과 패널이 각자 Suspense로 읽는다. `.cal`은 달력 루트가 아니라 이 래퍼에 있다.
 - 패널 304px을 넣으면 달력이 좁아져 페이지 컨테이너를 `max-w-5xl xl:max-w-7xl`로 넓혔다.
+- 톤앤매너를 이 앱의 다른 화면에 맞췄다. 칩 색은 앱 토큰(`bg-inbound/10 text-inbound`, `bg-danger/10 text-danger`, 중립 `bg-surface-3 text-ink-2`)으로 되돌렸고 `calendar.css`는 삭제했다(앞선 `--cal-event-*` 팔레트 이탈 항목은 폐기). 격자와 패널은 `rounded-2xl border border-line bg-surface` 카드 하나 안에 둔다.
+- 이번 달 날짜 칸은 `/history`가 아니라 `/calendar?m&d` 링크다(`parseDay` 추가). 패널이 그날 내역(최대 50건)을 보이고 `/history`로 가는 길은 패널 맨 아래 링크다. 모바일에서는 패널이 달력 아래라 스크롤이 필요하다(한계).

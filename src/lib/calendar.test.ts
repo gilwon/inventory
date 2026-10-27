@@ -1,6 +1,6 @@
 // 달력 날짜 계산·집계 순수 함수 테스트
 import { describe, expect, it } from "vitest";
-import { kstDay, kstLabel, monthGrid, monthKey, monthRangeIso, parseMonth, shiftMonth, tallyByDay } from "./calendar";
+import { kstDay, kstLabel, monthGrid, monthKey, monthRangeIso, parseDay, parseMonth, shiftMonth, tallyByDay } from "./calendar";
 
 describe("parseMonth/monthKey/shiftMonth", () => {
   it("실제 달만 허용한다", () => {
@@ -11,6 +11,16 @@ describe("parseMonth/monthKey/shiftMonth", () => {
     expect(shiftMonth(2026, 1, -1)).toEqual({ year: 2025, month: 12 });
     expect(shiftMonth(2026, 12, 1)).toEqual({ year: 2027, month: 1 });
     expect(monthKey(2026, 3)).toBe("2026-03");
+  });
+});
+
+describe("parseDay", () => {
+  it("해당 월 안의 실제 날짜만 허용한다", () => {
+    expect(parseDay("2026-10-24", 2026, 10)).toBe("2026-10-24");
+    expect(parseDay("2024-02-29", 2024, 2)).toBe("2024-02-29");
+    for (const s of ["", "abc", "2026-11-03", "2026-10-32", "2026-02-30", "2026-10-4"]) {
+      expect(parseDay(s, 2026, 10)).toBeNull();
+    }
   });
 });
 

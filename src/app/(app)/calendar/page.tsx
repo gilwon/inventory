@@ -1,4 +1,4 @@
-// 입출고 이력 달력 화면 (월 단위 일별 건수, 날짜를 누르면 그날 이력 목록으로 이동, 읽기 전용)
+// 입출고 이력 달력 화면 (월 단위 일별 건수, 날짜를 누르면 오른쪽 패널에 그날 입출고 내역, 읽기 전용)
 import Link from "next/link";
 import { Suspense } from "react";
 import { InlineAlert } from "@/components/lucian/inline-alert";
@@ -8,6 +8,7 @@ import {
   monthGrid,
   monthKey,
   monthRangeIso,
+  parseDay,
   parseMonth,
   shiftMonth,
   tallyByDay,
@@ -17,7 +18,6 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { KINDS } from "./kinds";
 import { RecentPanel } from "./recent-panel";
-import "./calendar.css";
 
 const PAGE = 1000;
 const MAX_PAGES = 5;
@@ -28,11 +28,11 @@ const MAX_CHIPS = 3;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const focus = "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
-const todayLink = `flex min-h-11 items-center rounded-lg border border-ink-3 px-3 text-sm font-medium text-ink hover:bg-surface-2 md:min-h-[30px] ${focus}`;
-const arrowLink = `flex h-full w-11 items-center justify-center text-ink hover:bg-surface-2 md:w-8 ${focus} focus-visible:ring-inset`;
+const todayLink = `flex min-h-11 items-center rounded-xl border border-ink-3 bg-surface px-3 text-sm font-medium text-ink hover:bg-surface-2 ${focus}`;
+const arrowLink = `flex h-full w-11 items-center justify-center text-ink hover:bg-surface-2 ${focus} focus-visible:ring-inset`;
 const arrowSvg = { width: 16, height: 16, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true } as const;
 
-async function CalendarContent({ year, month, today }: { year: number; month: number; today: string }) {
+async function CalendarContent({ year, month, today, selected }: { year: number; month: number; today: string; selected: string | null }) {
   const prev = shiftMonth(year, month, -1);
   const next = shiftMonth(year, month, 1);
   const current = monthKey(year, month);
@@ -64,10 +64,10 @@ async function CalendarContent({ year, month, today }: { year: number; month: nu
   const tally = failed ? new Map<string, DayTally>() : tallyByDay(rows);
 
   return (
-    <div className="space-y-4">
-      <nav aria-label="월 이동" className="flex flex-wrap items-center gap-x-2 gap-y-3">
+    <div>
+      <nav aria-label="월 이동" className="flex flex-wrap items-center gap-x-2 gap-y-3 p-4">
         <div className="min-w-0 flex-1">
-          <p className="text-lg font-bold tabular-nums" aria-live="polite">
+          <p className="text-base font-bold tabular-nums" aria-live="polite">
             {year}년 {month}월
           </p>
           <p className="text-sm text-ink-2">
@@ -77,7 +77,7 @@ async function CalendarContent({ year, month, today }: { year: number; month: nu
         <Link href="/calendar" className={todayLink}>
           오늘
         </Link>
-        <div className="flex h-11 overflow-hidden rounded-lg border border-ink-3 md:h-[30px]">
+        <div className="flex h-11 overflow-hidden rounded-xl border border-ink-3 bg-surface">
           <Link href={`/calendar?m=${monthKey(prev.year, prev.month)}`} aria-label="이전 달" className={arrowLink}>
             <svg {...arrowSvg}>
               <path d="M15 6l-6 6 6 6" />
@@ -92,9 +92,13 @@ async function CalendarContent({ year, month, today }: { year: number; month: nu
         </div>
       </nav>
 
-      {failed && <InlineAlert>달력을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</InlineAlert>}
+      {failed && (
+        <div className="px-4 pb-4">
+          <InlineAlert>달력을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</InlineAlert>
+        </div>
+      )}
       {!failed && truncated && (
-        <p className="text-sm text-ink-2">이 달 이력이 많아 일부만 집계했습니다.</p>
+        <p className="px-4 pb-4 text-sm text-ink-2">이 달 이력이 많아 일부만 집계했습니다.</p>
       )}
 
       <div className="border-t border-line">
@@ -129,16 +133,18 @@ async function CalendarContent({ year, month, today }: { year: number; month: nu
             }
             const t = tally.get(day);
             const chips = KINDS.filter((k) => t && t[k.key] > 0);
+            const isSelected = day === selected;
             const label = `${month}월 ${Number(day.slice(8))}일 ${
               chips.length ? chips.map((k) => `${k.label} ${t![k.key]}건`).join(", ") : "이력 없음"
-            }`;
+            }${isSelected ? ", 선택됨" : ""}`;
             return (
               <Link
                 key={day}
-                href={`/history?from=${day}&to=${day}`}
+                href={isSelected ? `/calendar?m=${current}` : `/calendar?m=${current}&d=${day}`}
+                scroll={false}
                 aria-label={label}
                 aria-current={isToday ? "date" : undefined}
-                className={`${cell} hover:bg-accent-soft ${focus} focus-visible:relative focus-visible:ring-inset`}
+                className={`${cell} hover:bg-accent-soft ${isSelected ? "bg-accent-soft ring-2 ring-inset ring-accent" : ""} ${focus} focus-visible:relative focus-visible:ring-inset`}
               >
                 {num}
                 <span aria-hidden="true" className="flex gap-0.5 md:hidden">
@@ -170,19 +176,22 @@ async function CalendarLayout({ searchParams }: { searchParams: SearchParams }) 
   const today = kstDay(new Date().toISOString());
   // m 이 없거나 실제 달이 아니면 이번 달(KST).
   const { year, month } = parseMonth(raw?.trim() ?? "") ?? parseMonth(today.slice(0, 7))!;
+  // d 는 해당 월 안의 실제 날짜일 때만 쓴다.
+  const rawDay = Array.isArray(sp.d) ? sp.d[0] : sp.d;
+  const selected = parseDay(rawDay?.trim() ?? "", year, month);
   return (
-    <div className="cal flex flex-col xl:flex-row">
-      <div className="min-w-0 flex-1 xl:pr-4">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-surface xl:flex-row">
+      <div className="min-w-0 flex-1">
         <Suspense fallback={<ListSkeleton />}>
-          <CalendarContent year={year} month={month} today={today} />
+          <CalendarContent year={year} month={month} today={today} selected={selected} />
         </Suspense>
       </div>
       <aside
         aria-label="입출고 내역"
-        className="mt-4 shrink-0 border-t border-line bg-surface-2 xl:mt-0 xl:w-[304px] xl:border-l xl:border-t-0"
+        className="shrink-0 border-t border-line xl:w-[304px] xl:border-l xl:border-t-0"
       >
         <Suspense fallback={<ListSkeleton />}>
-          <RecentPanel year={year} month={month} />
+          <RecentPanel year={year} month={month} day={selected ?? undefined} />
         </Suspense>
       </aside>
     </div>
