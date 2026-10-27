@@ -15,24 +15,28 @@ import {
   type TallyRow,
 } from "@/lib/calendar";
 import { createClient } from "@/lib/supabase/server";
+import "./calendar.css";
 
 const PAGE = 1000;
 const MAX_PAGES = 5;
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
-// 칩 순서·글자·색. 색만으로 구분하지 않도록 글자를 함께 둔다.
-const KINDS: { key: keyof DayTally; label: string; tone: string }[] = [
-  { key: "receive", label: "입고", tone: "text-inbound" },
-  { key: "issue", label: "출고", tone: "text-danger" },
-  { key: "transfer", label: "이동", tone: "text-ink-2" },
-  { key: "adjust", label: "조정", tone: "text-ink-2" },
-  { key: "import", label: "가져오기", tone: "text-ink-2" },
+// 칩 순서·글자·색. 색만으로 구분하지 않도록 글자를 함께 둔다. 색은 calendar.css 의 .cal 변수.
+const KINDS: { key: keyof DayTally; label: string; chip: string; dot: string }[] = [
+  { key: "receive", label: "입고", chip: "bg-(--cal-event-blue-bg) text-(--cal-event-blue-fg)", dot: "bg-(--cal-event-blue-fg)" },
+  { key: "issue", label: "출고", chip: "bg-(--cal-event-pink-bg) text-(--cal-event-pink-fg)", dot: "bg-(--cal-event-pink-fg)" },
+  { key: "transfer", label: "이동", chip: "bg-(--cal-event-cyan-bg) text-(--cal-event-cyan-fg)", dot: "bg-(--cal-event-cyan-fg)" },
+  { key: "adjust", label: "조정", chip: "bg-(--cal-event-orange-bg) text-(--cal-event-orange-fg)", dot: "bg-(--cal-event-orange-fg)" },
+  { key: "import", label: "가져오기", chip: "bg-(--cal-event-purple-bg) text-(--cal-event-purple-fg)", dot: "bg-(--cal-event-purple-fg)" },
 ];
+const MAX_CHIPS = 3;
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const focus = "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
-const navLink = `flex min-h-11 items-center rounded-xl border border-ink-3 px-4 text-base font-medium text-ink hover:bg-surface-2 ${focus}`;
+const todayLink = `flex min-h-11 items-center rounded-lg border border-ink-3 px-3 text-sm font-medium text-ink hover:bg-surface-2 md:min-h-[30px] ${focus}`;
+const arrowLink = `flex h-full w-11 items-center justify-center text-ink hover:bg-surface-2 md:w-8 ${focus} focus-visible:ring-inset`;
+const arrowSvg = { width: 16, height: 16, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true } as const;
 
 async function CalendarContent({ searchParams }: { searchParams: SearchParams }) {
   const sp = await searchParams;
@@ -71,20 +75,32 @@ async function CalendarContent({ searchParams }: { searchParams: SearchParams })
   const tally = failed ? new Map<string, DayTally>() : tallyByDay(rows);
 
   return (
-    <div className="space-y-4">
-      <nav aria-label="월 이동" className="flex flex-wrap items-center gap-2">
-        <Link href={`/calendar?m=${monthKey(prev.year, prev.month)}`} className={navLink}>
-          이전 달
-        </Link>
-        <p className="min-w-28 text-center text-lg font-bold tabular-nums" aria-live="polite">
-          {year}년 {month}월
-        </p>
-        <Link href={`/calendar?m=${monthKey(next.year, next.month)}`} className={navLink}>
-          다음 달
-        </Link>
-        <Link href="/calendar" className={navLink}>
+    <div className="cal space-y-4">
+      <nav aria-label="월 이동" className="flex flex-wrap items-center gap-x-2 gap-y-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-lg font-bold tabular-nums" aria-live="polite">
+            {year}년 {month}월
+          </p>
+          <p className="text-sm text-ink-2">
+            {month}월 1일 ~ {month}월 {new Date(Date.UTC(year, month, 0)).getUTCDate()}일
+          </p>
+        </div>
+        <Link href="/calendar" className={todayLink}>
           오늘
         </Link>
+        <div className="flex h-11 overflow-hidden rounded-lg border border-ink-3 md:h-[30px]">
+          <Link href={`/calendar?m=${monthKey(prev.year, prev.month)}`} aria-label="이전 달" className={arrowLink}>
+            <svg {...arrowSvg}>
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+          </Link>
+          <span aria-hidden="true" className="w-px bg-ink-3" />
+          <Link href={`/calendar?m=${monthKey(next.year, next.month)}`} aria-label="다음 달" className={arrowLink}>
+            <svg {...arrowSvg}>
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </Link>
+        </div>
       </nav>
 
       {failed && <InlineAlert>달력을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</InlineAlert>}
@@ -92,10 +108,10 @@ async function CalendarContent({ searchParams }: { searchParams: SearchParams })
         <p className="text-sm text-ink-2">이 달 이력이 많아 일부만 집계했습니다.</p>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-line bg-surface">
-        <div className="grid grid-cols-7 border-b border-line text-center text-sm font-medium text-ink-2">
-          {WEEKDAYS.map((w) => (
-            <div key={w} className="py-2">
+      <div className="border-t border-line">
+        <div className="grid h-10 grid-cols-7 border-b border-line text-sm text-ink-2">
+          {WEEKDAYS.map((w, i) => (
+            <div key={w} className={`flex items-center justify-center md:justify-start md:px-3 ${i > 0 ? "border-l border-line" : ""}`}>
               {w}
             </div>
           ))}
@@ -104,10 +120,10 @@ async function CalendarContent({ searchParams }: { searchParams: SearchParams })
           {monthGrid(year, month).map((day, i) => {
             const inMonth = day.startsWith(current);
             const isToday = day === today;
-            const cell = `min-h-20 min-w-0 border-line p-1 md:min-h-28 md:p-2 ${i % 7 > 0 ? "border-l" : ""} ${i >= 7 ? "border-t" : ""}`;
+            const cell = `flex min-h-20 min-w-0 flex-col items-center gap-1 border-b border-line p-1 md:min-h-28 md:items-stretch md:p-1.5 ${i % 7 > 0 ? "border-l" : ""}`;
             const num = (
               <span
-                className={`inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1 text-sm tabular-nums ${
+                className={`inline-flex h-6 min-w-6 items-center justify-center rounded-lg px-1 text-sm tabular-nums md:self-start ${
                   isToday ? "bg-accent font-bold text-accent-ink" : "font-medium"
                 }`}
               >
@@ -133,17 +149,21 @@ async function CalendarContent({ searchParams }: { searchParams: SearchParams })
                 href={`/history?from=${day}&to=${day}`}
                 aria-label={label}
                 aria-current={isToday ? "date" : undefined}
-                className={`${cell} block hover:bg-surface-2 ${focus} focus-visible:relative`}
+                className={`${cell} hover:bg-accent-soft ${focus} focus-visible:relative focus-visible:ring-inset`}
               >
                 {num}
-                <span aria-hidden="true" className="mt-1 flex flex-wrap gap-x-1.5 gap-y-0.5 md:flex-col md:gap-y-1">
-                  {chips.map((k) => (
-                    <span key={k.key} className={`flex items-center gap-1 text-xs font-semibold tabular-nums ${k.tone}`}>
-                      <span className="size-1.5 rounded-full bg-current md:hidden" />
-                      <span className="hidden md:inline">{k.label}</span>
-                      {t![k.key]}
+                <span aria-hidden="true" className="flex gap-0.5 md:hidden">
+                  {chips.slice(0, MAX_CHIPS).map((k) => (
+                    <span key={k.key} className={`size-1.5 rounded-full ${k.dot}`} />
+                  ))}
+                </span>
+                <span aria-hidden="true" className="hidden flex-col gap-1 md:flex">
+                  {chips.slice(0, MAX_CHIPS).map((k) => (
+                    <span key={k.key} className={`flex h-[22px] items-center truncate rounded-md px-1.5 text-xs font-semibold tabular-nums ${k.chip}`}>
+                      {k.label} {t![k.key]}
                     </span>
                   ))}
+                  {chips.length > MAX_CHIPS && <span className="px-1.5 text-xs text-ink-2">+{chips.length - MAX_CHIPS}개</span>}
                 </span>
               </Link>
             );
