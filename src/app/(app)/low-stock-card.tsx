@@ -21,7 +21,7 @@ export async function LowStockCard() {
         <p className="text-sm text-ink-2">부족한 품목이 없습니다</p>
       ) : (
         <>
-          <ul className="space-y-2 md:hidden">
+          <ul className="space-y-2 @xl:hidden">
             {rows.map((r) => (
               <li key={r.item_id} className="rounded-xl border border-line p-3">
                 <Link href={`/items/${r.item_id}`} className={`${linkCls} block min-h-11 break-words`}>
@@ -39,7 +39,7 @@ export async function LowStockCard() {
               </li>
             ))}
           </ul>
-          <table className="hidden w-full text-sm md:table">
+          <table className="hidden w-full text-sm @xl:table">
             <thead>
               <tr className="border-b border-line text-left text-xs text-ink-2">
                 <th scope="col" className="py-2 pr-3 font-medium">SKU</th>
