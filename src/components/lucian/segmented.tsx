@@ -1,6 +1,7 @@
 "use client";
 // Lucian UX/UI Prompt #047 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#047
 // 세그먼트 컨트롤. 선택 손잡이가 늘어나며 옮겨 가고, 좌우 방향키로 선택을 옮긴다.
+// variant="chip" 은 Lucian UX/UI Prompt #292 의 칩 줄(선택 칩이 ink 로 채워짐) 모양이다. <!-- #292 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#292 -->
 
 import { useRef, useState } from "react";
 import "./segmented.css";
@@ -10,12 +11,15 @@ export function Segmented<T extends string>({
   value,
   onChange,
   ariaLabel,
+  variant,
 }: {
   options: { value: T; label: string }[];
   value: T;
   onChange: (v: T) => void;
   ariaLabel: string;
+  variant?: "chip";
 }) {
+  const chip = variant === "chip";
   const n = options.length;
   const idx = Math.max(
     0,
@@ -38,28 +42,30 @@ export function Segmented<T extends string>({
 
   return (
     <div
-      className={`ux u047-seg${dir > 0 ? " go-r" : dir < 0 ? " go-l" : ""}`}
+      className={`ux ${chip ? "u292-fs" : "u047-seg"}${dir > 0 ? " go-r" : dir < 0 ? " go-l" : ""}`}
       role="radiogroup"
       aria-label={ariaLabel}
       style={{ "--n": n } as React.CSSProperties}
     >
-      <span
-        className="u047-knob"
-        aria-hidden="true"
-        style={
-          {
-            "--l": `calc(4px + ${idx} * (100% - 8px) / ${n})`,
-            "--r": `calc(4px + ${n - 1 - idx} * (100% - 8px) / ${n})`,
-          } as React.CSSProperties
-        }
-      />
+      {!chip && (
+        <span
+          className="u047-knob"
+          aria-hidden="true"
+          style={
+            {
+              "--l": `calc(4px + ${idx} * (100% - 8px) / ${n})`,
+              "--r": `calc(4px + ${n - 1 - idx} * (100% - 8px) / ${n})`,
+            } as React.CSSProperties
+          }
+        />
+      )}
       {options.map((o, i) => (
         <button
           key={o.value}
           ref={(el) => {
             btns.current[i] = el;
           }}
-          className="u047-opt"
+          className={chip ? "u292-f" : "u047-opt"}
           type="button"
           role="radio"
           aria-checked={i === idx}

@@ -274,6 +274,7 @@ export function MoveForm({ locations }: { locations: Loc[] }) {
     <form onSubmit={submit} className="space-y-6" noValidate>
       <Segmented
         ariaLabel="작업 유형"
+        variant="chip"
         options={TABS.map((t) => ({ value: t.type, label: t.label }))}
         value={tab}
         onChange={changeTab}
