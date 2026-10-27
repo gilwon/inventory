@@ -41,6 +41,14 @@ export function kstDay(iso: string): string {
   return Number.isNaN(t) ? "" : ymd(t + KST_MS);
 }
 
+// UTC ISO 문자열을 KST "10월 27일 14:30" 으로. 잘못된 값이면 빈 문자열.
+export function kstLabel(iso: string): string {
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return "";
+  const k = new Date(t + KST_MS).toISOString();
+  return `${Number(k.slice(5, 7))}월 ${Number(k.slice(8, 10))}일 ${k.slice(11, 16)}`;
+}
+
 // 해당 달의 KST 조회 범위 (1일 00:00:00.000 ~ 말일 23:59:59.999) 를 ISO 문자열로.
 export function monthRangeIso(year: number, month: number): { from: string; to: string } {
   const start = Date.UTC(year, month - 1, 1) - KST_MS;

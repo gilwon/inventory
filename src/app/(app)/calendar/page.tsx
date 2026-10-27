@@ -15,20 +15,14 @@ import {
   type TallyRow,
 } from "@/lib/calendar";
 import { createClient } from "@/lib/supabase/server";
+import { KINDS } from "./kinds";
+import { RecentPanel } from "./recent-panel";
 import "./calendar.css";
 
 const PAGE = 1000;
 const MAX_PAGES = 5;
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
-// 칩 순서·글자·색. 색만으로 구분하지 않도록 글자를 함께 둔다. 색은 calendar.css 의 .cal 변수.
-const KINDS: { key: keyof DayTally; label: string; chip: string; dot: string }[] = [
-  { key: "receive", label: "입고", chip: "bg-(--cal-event-blue-bg) text-(--cal-event-blue-fg)", dot: "bg-(--cal-event-blue-fg)" },
-  { key: "issue", label: "출고", chip: "bg-(--cal-event-pink-bg) text-(--cal-event-pink-fg)", dot: "bg-(--cal-event-pink-fg)" },
-  { key: "transfer", label: "이동", chip: "bg-(--cal-event-cyan-bg) text-(--cal-event-cyan-fg)", dot: "bg-(--cal-event-cyan-fg)" },
-  { key: "adjust", label: "조정", chip: "bg-(--cal-event-orange-bg) text-(--cal-event-orange-fg)", dot: "bg-(--cal-event-orange-fg)" },
-  { key: "import", label: "가져오기", chip: "bg-(--cal-event-purple-bg) text-(--cal-event-purple-fg)", dot: "bg-(--cal-event-purple-fg)" },
-];
 const MAX_CHIPS = 3;
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -38,12 +32,7 @@ const todayLink = `flex min-h-11 items-center rounded-lg border border-ink-3 px-
 const arrowLink = `flex h-full w-11 items-center justify-center text-ink hover:bg-surface-2 md:w-8 ${focus} focus-visible:ring-inset`;
 const arrowSvg = { width: 16, height: 16, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true } as const;
 
-async function CalendarContent({ searchParams }: { searchParams: SearchParams }) {
-  const sp = await searchParams;
-  const raw = Array.isArray(sp.m) ? sp.m[0] : sp.m;
-  const today = kstDay(new Date().toISOString());
-  // m 이 없거나 실제 달이 아니면 이번 달(KST).
-  const { year, month } = parseMonth(raw?.trim() ?? "") ?? parseMonth(today.slice(0, 7))!;
+async function CalendarContent({ year, month, today }: { year: number; month: number; today: string }) {
   const prev = shiftMonth(year, month, -1);
   const next = shiftMonth(year, month, 1);
   const current = monthKey(year, month);
@@ -75,7 +64,7 @@ async function CalendarContent({ searchParams }: { searchParams: SearchParams })
   const tally = failed ? new Map<string, DayTally>() : tallyByDay(rows);
 
   return (
-    <div className="cal space-y-4">
+    <div className="space-y-4">
       <nav aria-label="월 이동" className="flex flex-wrap items-center gap-x-2 gap-y-3">
         <div className="min-w-0 flex-1">
           <p className="text-lg font-bold tabular-nums" aria-live="polite">
@@ -174,12 +163,38 @@ async function CalendarContent({ searchParams }: { searchParams: SearchParams })
   );
 }
 
+// 월을 먼저 정한 뒤 달력과 입출고 내역 패널을 각자 Suspense 로 읽는다. 패널 오류·지연이 달력을 막지 않는다.
+async function CalendarLayout({ searchParams }: { searchParams: SearchParams }) {
+  const sp = await searchParams;
+  const raw = Array.isArray(sp.m) ? sp.m[0] : sp.m;
+  const today = kstDay(new Date().toISOString());
+  // m 이 없거나 실제 달이 아니면 이번 달(KST).
+  const { year, month } = parseMonth(raw?.trim() ?? "") ?? parseMonth(today.slice(0, 7))!;
+  return (
+    <div className="cal flex flex-col xl:flex-row">
+      <div className="min-w-0 flex-1 xl:pr-4">
+        <Suspense fallback={<ListSkeleton />}>
+          <CalendarContent year={year} month={month} today={today} />
+        </Suspense>
+      </div>
+      <aside
+        aria-label="입출고 내역"
+        className="mt-4 shrink-0 border-t border-line bg-surface-2 xl:mt-0 xl:w-[304px] xl:border-l xl:border-t-0"
+      >
+        <Suspense fallback={<ListSkeleton />}>
+          <RecentPanel year={year} month={month} />
+        </Suspense>
+      </aside>
+    </div>
+  );
+}
+
 export default function CalendarPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <div className="mx-auto max-w-5xl space-y-4">
+    <div className="mx-auto max-w-5xl space-y-4 xl:max-w-7xl">
       <h1 className="text-xl font-bold">달력</h1>
       <Suspense fallback={<ListSkeleton />}>
-        <CalendarContent searchParams={searchParams} />
+        <CalendarLayout searchParams={searchParams} />
       </Suspense>
     </div>
   );

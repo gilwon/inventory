@@ -1,6 +1,6 @@
 // 달력 날짜 계산·집계 순수 함수 테스트
 import { describe, expect, it } from "vitest";
-import { kstDay, monthGrid, monthKey, monthRangeIso, parseMonth, shiftMonth, tallyByDay } from "./calendar";
+import { kstDay, kstLabel, monthGrid, monthKey, monthRangeIso, parseMonth, shiftMonth, tallyByDay } from "./calendar";
 
 describe("parseMonth/monthKey/shiftMonth", () => {
   it("실제 달만 허용한다", () => {
@@ -33,6 +33,11 @@ describe("kstDay/monthRangeIso", () => {
     expect(kstDay("2026-03-31T14:59:59.999Z")).toBe("2026-03-31");
     expect(kstDay("2026-03-31T15:00:00.000Z")).toBe("2026-04-01");
     expect(kstDay("bad")).toBe("");
+  });
+  it("kstLabel 은 KST 월일 시각 문구를 만든다", () => {
+    expect(kstLabel("2026-10-27T05:30:00Z")).toBe("10월 27일 14:30");
+    expect(kstLabel("2026-12-31T15:05:00Z")).toBe("1월 1일 00:05");
+    expect(kstLabel("bad")).toBe("");
   });
   it("월 경계를 KST 로 계산한다", () => {
     expect(monthRangeIso(2026, 3)).toEqual({
