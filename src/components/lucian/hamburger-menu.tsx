@@ -1,5 +1,6 @@
 "use client";
-// 모바일(md 미만) 헤더 햄버거 버튼과 전체 메뉴 시트. --ux-* 토큰으로 직접 만들었다(Lucian 원본 이식 아님)
+// 모바일(md 미만) 헤더 햄버거 버튼과 아래로 펼쳐지는 전체 메뉴. Lucian UX/UI #286 이식(하위 메뉴 이동은 항목에 하위가 없어 제외)
+// <!-- Lucian UX/UI Prompt #286 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#286 -->
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,7 +23,7 @@ export function HamburgerMenu({
   const open = openedAt === pathname;
   const panelId = useId();
   const btnRef = useRef<HTMLButtonElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
 
   // 닫고 포커스를 햄버거로 돌린다.
   function close() {
@@ -34,6 +35,7 @@ export function HamburgerMenu({
   useEffect(() => {
     if (!open) return;
     const panel = panelRef.current;
+    const btn = btnRef.current;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     panel?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
@@ -42,12 +44,12 @@ export function HamburgerMenu({
       if (e.key === "Escape") {
         e.preventDefault();
         setOpenedAt(null);
-        btnRef.current?.focus();
+        btn?.focus();
         return;
       }
-      if (e.key !== "Tab" || !panel) return;
-      const els = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE));
-      if (!els.length) return;
+      if (e.key !== "Tab" || !panel || !btn) return;
+      // 버튼(X)도 순환에 넣어 키보드로 닫을 수 있게 한다.
+      const els = [btn, ...Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE))];
       const cur = els.indexOf(document.activeElement as HTMLElement);
       const next = cur < 0 ? 0 : (cur + (e.shiftKey ? -1 : 1) + els.length) % els.length;
       e.preventDefault();
@@ -72,50 +74,41 @@ export function HamburgerMenu({
         ref={btnRef}
         className="hmenu-btn"
         type="button"
-        aria-label="메뉴 열기"
+        aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpenedAt(pathname)}
+        onClick={() => (open ? close() : setOpenedAt(pathname))}
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
+        <span aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
       </button>
-      <div className="hmenu-layer" inert={!open}>
-        <div className="hmenu-scrim" onClick={close} aria-hidden="true" />
-        <div ref={panelRef} id={panelId} className="hmenu-panel" role="dialog" aria-modal="true" aria-label="전체 메뉴">
-          <div className="hmenu-head">
-            <span className="hmenu-title">메뉴</span>
-            <button className="hmenu-x" type="button" aria-label="메뉴 닫기" onClick={close}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
-          </div>
-          <ul className="hmenu-list">
-            {items.map((it, i) => (
-              <li key={it.href}>
-                <Link
-                  className="hmenu-it"
-                  href={it.href}
-                  style={{ "--i": i } as CSSProperties}
-                  aria-current={isActive(pathname, it.href) ? "page" : undefined}
-                  onClick={close}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true">{it.icon}</svg>
-                  <span>{it.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <form className="hmenu-foot" action={logoutAction}>
-            <button className="hmenu-it" type="submit">
-              <svg viewBox="0 0 24 24" aria-hidden="true">{LOGOUT_ICON}</svg>
-              <span>로그아웃</span>
-            </button>
-          </form>
-        </div>
-      </div>
+      <nav ref={panelRef} id={panelId} className="hmenu-panel" aria-label="전체 메뉴" inert={!open}>
+        <ul className="hmenu-list">
+          {items.map((it, i) => (
+            <li key={it.href}>
+              <Link
+                className="hmenu-it"
+                href={it.href}
+                style={{ "--i": i } as CSSProperties}
+                aria-current={isActive(pathname, it.href) ? "page" : undefined}
+                onClick={close}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">{it.icon}</svg>
+                <span>{it.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <form className="hmenu-foot" action={logoutAction}>
+          <button className="hmenu-it" type="submit" style={{ "--i": items.length } as CSSProperties}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">{LOGOUT_ICON}</svg>
+            <span>로그아웃</span>
+          </button>
+        </form>
+      </nav>
     </div>
   );
 }
