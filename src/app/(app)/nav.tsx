@@ -52,6 +52,16 @@ export const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
+    href: "/calendar",
+    label: "달력",
+    icon: (
+      <>
+        <rect x="4" y="5.5" width="16" height="14.5" rx="2" />
+        <path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" />
+      </>
+    ),
+  },
+  {
     href: "/import-export",
     label: "가져오기/내보내기",
     icon: <path d="M12 4v11M12 15l-4-4M12 15l4-4M5 19.5h14" />,
