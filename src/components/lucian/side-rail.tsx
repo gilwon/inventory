@@ -28,7 +28,8 @@ export function SideRail({
   logoutAction: () => void | Promise<void>;
 }) {
   const pathname = usePathname();
-  const [wide, setWide] = useState(false);
+  // 처음부터 펼친 상태로 보여 준다.
+  const [wide, setWide] = useState(true);
   const activeIdx = items.findIndex((it) => isActive(pathname, it.href));
 
   // 위아래 화살표로 메뉴 항목(로그아웃 포함)을 오간다.
