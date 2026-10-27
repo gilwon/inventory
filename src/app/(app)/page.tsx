@@ -9,7 +9,7 @@ import { formatKst, formatQty } from "@/lib/format";
 import { buildLocationPaths } from "@/lib/location-path";
 import { moveTone } from "@/lib/move-tone";
 import { createClient } from "@/lib/supabase/server";
-import { btnSecondary, cardCls, inputCls } from "./items/common";
+import { btnSecondary, cardCls, focusRing, inputCls } from "./items/common";
 import { LowStockCard } from "./low-stock-card";
 
 type Row = {
@@ -36,6 +36,14 @@ function typeLabel(r: Row): string {
     }[r.type] ?? r.type
   );
 }
+
+// 자주 쓰는 화면으로 바로 이동하는 링크(하단 탭에 없는 실사·라벨 포함).
+const QUICK_LINKS = [
+  { href: "/move", label: "입출고 기록" },
+  { href: "/scan", label: "스캔" },
+  { href: "/stocktake", label: "실사" },
+  { href: "/labels", label: "라벨 출력" },
+];
 
 async function DashboardData() {
   const supabase = await createClient();
@@ -106,7 +114,7 @@ async function DashboardData() {
 
       <section
         aria-labelledby="recent-h"
-        className={`${cardCls} col-span-2 space-y-3 md:col-span-4 lg:col-span-2`}
+        className={`${cardCls} col-span-2 space-y-3 md:col-span-4 lg:col-span-2 lg:row-span-2`}
       >
         <div className="flex items-center justify-between gap-3">
           <h2 id="recent-h" className="text-base font-bold">
@@ -152,6 +160,26 @@ async function DashboardData() {
             ))}
           </ul>
         )}
+      </section>
+
+      <section
+        aria-labelledby="quick-h"
+        className={`${cardCls} col-span-2 space-y-3 md:col-span-4 lg:col-span-2`}
+      >
+        <h2 id="quick-h" className="text-base font-bold">
+          바로가기
+        </h2>
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-2">
+          {QUICK_LINKS.map((q) => (
+            <Link
+              key={q.href}
+              href={q.href}
+              className={`flex min-h-14 items-center rounded-xl bg-surface-2 px-3 text-sm font-medium text-ink hover:bg-surface-3 ${focusRing}`}
+            >
+              {q.label}
+            </Link>
+          ))}
+        </div>
       </section>
     </>
   );
